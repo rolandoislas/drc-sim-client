@@ -27,6 +27,7 @@ public class StageControl extends Stage {
 	private final TextButton buttonB;
 	private final SpriteBatch spritebatch;
 	private final Button wiiScreen;
+	private final TextButton buttonHome;
 	private Texture wiiImage;
 	private int activePointers;
 
@@ -65,7 +66,7 @@ public class StageControl extends Stage {
 		TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
 		buttonStyle.up = buttonSkin.getDrawable("up");
 		buttonStyle.down = buttonSkin.getDrawable("down");
-		buttonStyle.font = new BitmapFont(); // TODO freetype font
+		buttonStyle.font = new BitmapFont(Gdx.files.internal("font/collvetica.fnt"));
 		buttonA = new TextButton("A", buttonStyle);
 		buttonA.setPosition(Gdx.graphics.getWidth() - x - buttonWidth, y + buttonHeight);
 		addActor(buttonA);
@@ -73,6 +74,10 @@ public class StageControl extends Stage {
 		buttonB = new TextButton("B", buttonStyle);
 		buttonB.setPosition(Gdx.graphics.getWidth() - x - 2 * buttonWidth, y);
 		addActor(buttonB);
+		// Home Button
+		buttonHome = new TextButton("H", buttonStyle);
+		buttonHome.setPosition(Gdx.graphics.getWidth() / 2 - buttonWidth / 2, 10);
+		addActor(buttonHome);
 	}
 
 	private Texture resizeTexture(String internalPath, float width, float height) {
@@ -113,6 +118,8 @@ public class StageControl extends Stage {
 			buttonBits |= Constants.BUTTON_A;
 		if (buttonB.isPressed())
 			buttonBits |= Constants.BUTTON_B;
+		if (buttonHome.isPressed())
+			buttonBits |= Constants.BUTTON_HOME;
 		sendButtonInput(buttonBits);
 	}
 
