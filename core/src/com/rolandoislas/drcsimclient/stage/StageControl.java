@@ -47,8 +47,8 @@ public class StageControl extends Stage {
 		float touchpadWidth = Gdx.graphics.getWidth() * (250f / 2560);
 		float touchpadHeight = Gdx.graphics.getHeight() * (250f / 1440);
 		Skin touchpadSkin = new Skin();
-		touchpadSkin.add("background", new Texture("touchpad-background.png"));
-		touchpadSkin.add("knob", resizeTexture("touchpad-knob.png", touchpadWidth / 2,
+		touchpadSkin.add("background", new Texture("image/touchpad-background.png"));
+		touchpadSkin.add("knob", resizeTexture("image/touchpad-knob.png", touchpadWidth / 2,
 				touchpadHeight / 2));
 		Touchpad.TouchpadStyle touchpadStyle = new Touchpad.TouchpadStyle();
 		touchpadStyle.background = touchpadSkin.getDrawable("background");
@@ -60,8 +60,8 @@ public class StageControl extends Stage {
 		float buttonWidth = touchpadWidth / 2;
 		float buttonHeight = touchpadHeight / 2;
 		Skin buttonSkin = new Skin();
-		buttonSkin.add("up", resizeTexture("button-up.png", buttonWidth, buttonHeight));
-		buttonSkin.add("down", resizeTexture("button-down.png", buttonWidth, buttonHeight));
+		buttonSkin.add("up", resizeTexture("image/button-up.png", buttonWidth, buttonHeight));
+		buttonSkin.add("down", resizeTexture("image/button-down.png", buttonWidth, buttonHeight));
 		TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
 		buttonStyle.up = buttonSkin.getDrawable("up");
 		buttonStyle.down = buttonSkin.getDrawable("down");

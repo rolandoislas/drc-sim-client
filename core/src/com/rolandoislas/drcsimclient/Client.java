@@ -4,15 +4,15 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.rolandoislas.drcsimclient.stage.StageConnect;
 import com.rolandoislas.drcsimclient.stage.StageControl;
 
 public class Client extends ApplicationAdapter {
-	private Stage stage;
+	private static Stage stage;
 
 	@Override
 	public void create () {
-		this.stage = new StageControl("eee-pc");
-		Gdx.input.setInputProcessor(stage);
+		setStage(new StageConnect());
 	}
 
 	@Override
@@ -38,5 +38,10 @@ public class Client extends ApplicationAdapter {
 	public void resume() {
 		super.resume();
 		create();
+	}
+
+	public static void setStage(Stage stage) {
+		Client.stage = stage;
+		Gdx.input.setInputProcessor(stage);
 	}
 }
