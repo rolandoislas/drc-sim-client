@@ -28,6 +28,8 @@ public class StageControl extends Stage {
 	private final SpriteBatch spritebatch;
 	private final Button wiiScreen;
 	private final TextButton buttonHome;
+	private final Button buttonLeftTrigger;
+	private final Button buttonRightTrigger;
 	private Texture wiiImage;
 	private int activePointers;
 
@@ -78,6 +80,17 @@ public class StageControl extends Stage {
 		buttonHome = new TextButton("H", buttonStyle);
 		buttonHome.setPosition(Gdx.graphics.getWidth() / 2 - buttonWidth / 2, 10);
 		addActor(buttonHome);
+		// Left Trigger
+		float triggerWidth = Gdx.graphics.getWidth() * .1f;
+		float triggerHeight = Gdx.graphics.getHeight() * .1f;
+		buttonLeftTrigger = new Button(new Button.ButtonStyle());
+		buttonLeftTrigger.setBounds(0, Gdx.graphics.getHeight() - triggerHeight, triggerWidth, triggerHeight);
+		addActor(buttonLeftTrigger);
+		// Right Trigger
+		buttonRightTrigger = new Button(new Button.ButtonStyle());
+		buttonRightTrigger.setBounds(Gdx.graphics.getWidth() - triggerWidth,
+				Gdx.graphics.getHeight() - triggerHeight, triggerWidth, triggerHeight);
+		addActor(buttonRightTrigger);
 	}
 
 	private Texture resizeTexture(String internalPath, float width, float height) {
@@ -120,6 +133,10 @@ public class StageControl extends Stage {
 			buttonBits |= Constants.BUTTON_B;
 		if (buttonHome.isPressed())
 			buttonBits |= Constants.BUTTON_HOME;
+		if (buttonLeftTrigger.isPressed())
+			buttonBits |= Constants.BUTTON_L;
+		if (buttonRightTrigger.isPressed())
+			buttonBits |= Constants.BUTTON_R;
 		sendButtonInput(buttonBits);
 	}
 
