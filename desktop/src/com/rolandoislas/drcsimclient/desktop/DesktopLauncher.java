@@ -1,5 +1,6 @@
 package com.rolandoislas.drcsimclient.desktop;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.rolandoislas.drcsimclient.Client;
@@ -12,6 +13,11 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
 		config.height = 720;
+		config.title = "DRC Sim";
+		config.addIcon("image/icon-512.png", Files.FileType.Internal);
+		config.addIcon("image/icon-256.png", Files.FileType.Internal);
+		config.addIcon("image/icon-32.png", Files.FileType.Internal);
+		config.addIcon("image/icon-16.png", Files.FileType.Internal);
 		Control[] controls = new Control[] {new ControlKeyboard(), new ControlController()};
 		new LwjglApplication(new Client(controls), config);
 	}

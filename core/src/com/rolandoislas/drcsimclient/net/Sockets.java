@@ -95,12 +95,16 @@ public class Sockets {
 	}
 
 	public void close() {
-		socketCmd.disconnect();
-		socketCmd.close();
-		try {
-			socketVid.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (socketCmd != null) {
+			socketCmd.disconnect();
+			socketCmd.close();
+		}
+		if (socketVid != null) {
+			try {
+				socketVid.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

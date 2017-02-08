@@ -4,6 +4,7 @@ import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.rolandoislas.drcsimclient.control.Control;
+import com.rolandoislas.drcsimclient.control.ControlController;
 import com.rolandoislas.drcsimclient.control.ControlTouch;
 
 public class AndroidLauncher extends AndroidApplication {
@@ -13,7 +14,7 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useImmersiveMode = true;
 		config.useWakelock = true;
-		Control[] controls = new Control[] {new ControlTouch()};
+		Control[] controls = new Control[] {new ControlTouch(), new ControlController()};
 		initialize(new Client(controls), config);
 	}
 }
