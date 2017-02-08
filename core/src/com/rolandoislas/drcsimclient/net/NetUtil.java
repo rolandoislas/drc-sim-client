@@ -1,9 +1,9 @@
 package com.rolandoislas.drcsimclient.net;
 
-import com.badlogic.gdx.Gdx;
 import com.google.common.primitives.Bytes;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,15 +13,25 @@ import java.util.HashMap;
  */
 public class NetUtil {
 	private static HashMap<String, byte[]> buffers = new HashMap<String, byte[]>();
+	private static HashMap<String, Long> timestamps = new HashMap<String, Long>();
 
 	public static byte[] recv(Socket socket, String bufferId) throws IOException {
 		BufferedInputStream inStream = new BufferedInputStream(socket.getInputStream());
 		if (!buffers.containsKey(bufferId))
 			buffers.put(bufferId, new byte[0]);
+		if (!timestamps.containsKey(bufferId))
+			timestamps.put(bufferId, System.currentTimeMillis());
 		while (!new String(buffers.get(bufferId)).contains(Codec.endDelimiter)) {
+			// Disconnected
+			if (System.currentTimeMillis() - timestamps.get(bufferId) >= 10000) {
+				timestamps.clear();
+				buffers.clear();
+				throw new IOException("Disconnected");
+			}
 			// Timeout
 			if (inStream.available() < 2)
 				throw new IOException("Read timeout");
+			timestamps.put(bufferId, System.currentTimeMillis());
 			// Read
 			byte[] read = new byte[100000];
 			int numRead = inStream.read(read);
@@ -38,9 +48,5 @@ public class NetUtil {
 		buffers.put(bufferId, Arrays.copyOfRange(buffers.get(bufferId), index + Codec.endDelimiter.length(),
 				buffers.get(bufferId).length));
 		return Codec.decode(packet);
-	}
-
-	public static void clearBuffer(String bufferId) {
-		buffers.remove(bufferId);
 	}
 }
