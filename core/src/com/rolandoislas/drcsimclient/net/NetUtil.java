@@ -1,6 +1,7 @@
 package com.rolandoislas.drcsimclient.net;
 
 import com.google.common.primitives.Bytes;
+import com.rolandoislas.drcsimclient.data.Constants;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -8,12 +9,15 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import static com.rolandoislas.drcsimclient.Client.sockets;
+
 /**
  * Created by Rolando on 12/21/2016.
  */
 public class NetUtil {
 	private static HashMap<String, byte[]> buffers = new HashMap<String, byte[]>();
 	private static HashMap<String, Long> timestamps = new HashMap<String, Long>();
+	private static boolean pingSent = false;
 
 	public static byte[] recv(Socket socket, String bufferId) throws IOException {
 		BufferedInputStream inStream = new BufferedInputStream(socket.getInputStream());
@@ -23,10 +27,14 @@ public class NetUtil {
 			timestamps.put(bufferId, System.currentTimeMillis());
 		while (!new String(buffers.get(bufferId)).contains(Codec.endDelimiter)) {
 			// Disconnected
-			if (System.currentTimeMillis() - timestamps.get(bufferId) >= 10000) {
-				timestamps.clear();
-				buffers.clear();
+			long time = System.currentTimeMillis() - timestamps.get(bufferId);
+			if (time >= 10000) {
+				clear();
 				throw new IOException("Disconnected");
+			}
+			if (time >= 5000 && !pingSent) {
+				sockets.sendCommand(Constants.COMMAND_PING);
+				pingSent = true;
 			}
 			// Timeout
 			if (inStream.available() < 2)
@@ -48,5 +56,16 @@ public class NetUtil {
 		buffers.put(bufferId, Arrays.copyOfRange(buffers.get(bufferId), index + Codec.endDelimiter.length(),
 				buffers.get(bufferId).length));
 		return Codec.decode(packet);
+	}
+
+	static void clear() {
+		timestamps.clear();
+		buffers.clear();
+		pingSent = false;
+	}
+
+	public static void resetTimeout() {
+		timestamps.clear();
+		pingSent = false;
 	}
 }

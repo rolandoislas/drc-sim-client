@@ -1,8 +1,8 @@
 package com.rolandoislas.drcsimclient.net;
 
-import com.badlogic.gdx.utils.Json;
 import com.google.gson.Gson;
 
+import java.net.DatagramPacket;
 import java.util.Arrays;
 
 /**
@@ -24,6 +24,10 @@ public class Codec {
 	public static byte[] encodeCommand(String name, String data) {
 		String encodedString = name + commandDelimiter + data;
 		return encodedString.getBytes();
+	}
+
+	public static String[] decodeCommand(DatagramPacket packet) {
+		return new String(packet.getData(), 0, packet.getLength()).split(commandDelimiter);
 	}
 
 	public static String encodeInput(Object o) {

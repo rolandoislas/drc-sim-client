@@ -12,7 +12,8 @@ import java.net.*;
 public class Sockets {
 	private String ip;
 	public Socket socketVid;
-	private DatagramSocket socketCmd;
+	public DatagramSocket socketCmd;
+	public Socket socketAud;
 
 	public void setIp(String ip) {
 		this.ip = ip;
@@ -20,8 +21,12 @@ public class Sockets {
 
 	public void connect() throws Exception {
 		try {
-			this.socketVid = new Socket(InetAddress.getByName(ip), Constants.PORT_SERVER_VID);
+			this.socketVid = new Socket();
+			this.socketVid.connect(new InetSocketAddress(InetAddress.getByName(ip), Constants.PORT_SERVER_VID), 5);
+			this.socketAud = new Socket();
+			this.socketAud.connect(new InetSocketAddress(InetAddress.getByName(ip), Constants.PORT_SERVER_AUD), 5);
 			this.socketCmd = new DatagramSocket();
+			this.socketCmd.setSoTimeout(1);
 			sendCommand(Constants.COMMAND_REGISTER);
 		}
 		catch (UnknownHostException e) {
@@ -106,5 +111,13 @@ public class Sockets {
 				e.printStackTrace();
 			}
 		}
+		if (socketAud != null) {
+			try {
+				socketAud.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		NetUtil.clear();
 	}
 }

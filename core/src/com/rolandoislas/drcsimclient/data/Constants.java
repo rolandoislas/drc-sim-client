@@ -6,6 +6,7 @@ package com.rolandoislas.drcsimclient.data;
 public class Constants {
 	// Ports
 	public static final int PORT_SERVER_VID = 50000;
+	public static final int PORT_SERVER_AUD = 50001;
 	public static final int PORT_SERVER_CMD = 50002;
 	// Commands
 	public static final String COMMAND_REGISTER = "REGISTER";
@@ -14,6 +15,8 @@ public class Constants {
 	public static final String COMMAND_INPUT_TOUCH = "INPUT_TOUCH";
 	public static final String COMMAND_INPUT_JOYSTICK = "INPUT_JOYSTICK";
 	public static final String COMMAND_VIBRATE = "VIBRATE";
+	public static final String COMMAND_PING = "PING";
+	public static final String COMMAND_PONG = "PONG";
 	// Buttons
 	public static final int BUTTON_A = 0x8000;
 	public static final int BUTTON_B = 0x4000;
