@@ -6,7 +6,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.rolandoislas.drcsimclient.Util.AudioUtil;
+import com.rolandoislas.drcsimclient.audio.AudioThread;
+import com.rolandoislas.drcsimclient.audio.AudioUtil;
 import com.rolandoislas.drcsimclient.control.Control;
 import com.rolandoislas.drcsimclient.data.Constants;
 import com.rolandoislas.drcsimclient.net.Codec;
@@ -21,7 +22,8 @@ import static com.rolandoislas.drcsimclient.Client.*;
  * Created by Rolando on 12/21/2016.
  */
 public class StageControl extends Stage {
-	private final AudioUtil audio;
+	private final AudioUtil audioUtil;
+	private final AudioThread audioThread;
 	private Texture wiiImage;
 	private SpriteBatch spritebatch;
 	private Button wiiScreen;
@@ -35,11 +37,13 @@ public class StageControl extends Stage {
 		wiiScreen.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		wiiImage = new Texture("image/placeholder.png");
 		addActor(wiiScreen);
-		// Audio
-		audio = new AudioUtil();
 		// Initialize controls
 		for (Control control : controls)
 			control.init(this);
+		// Audio
+		audioUtil = new AudioUtil();
+		audioThread = new AudioThread(audioUtil);
+		audioThread.start();
 	}
 
 	@Override
@@ -63,34 +67,12 @@ public class StageControl extends Stage {
 		checkNetworkCommands();
 		// Update wii video frame
 		updateWiiVideoFrame();
-		// Update wii audio
-		updateWiiAudio();
 		// Check touch/click screen input
 		if (wiiScreen.isPressed())
 			sockets.sendTouchScreenInput(Gdx.input.getX(), Gdx.input.getY());
 		// Update controls
 		for (Control control : controls)
 			control.update();
-	}
-
-	private void updateWiiAudio() {
-		try {
-			byte[] packet = NetUtil.recv(sockets.socketAud, "audio");
-			//audio.addData(packet);
-		} catch (IOException e) {
-			checkDisconnect(e);
-		}
-		//audio.update();
-	}
-
-	private void checkDisconnect(IOException e) {
-		if (e.getMessage().contains("Read timeout"))
-			return;
-		else if (e.getMessage().contains("Disconnected")) {
-			setStage(new StageConnect("Disconnected"));
-			return;
-		}
-		e.printStackTrace();
 	}
 
 	private void checkNetworkCommands() {
@@ -117,9 +99,11 @@ public class StageControl extends Stage {
 			wiiImage = new Texture(pixmap);
 			pixmap.dispose();
 		} catch (IOException e) {
-			checkDisconnect(e);
+			if (e.getMessage().contains("Disconnected"))
+				setStage(new StageConnect("Disconnected"));
 		} catch (GdxRuntimeException e) {
 			e.printStackTrace();
+			wiiImage = new Texture("image/placeholder.png");
 		}
 	}
 
@@ -128,6 +112,7 @@ public class StageControl extends Stage {
 		super.dispose();
 		wiiImage.dispose();
 		spritebatch.dispose();
-		audio.dispose();
+		audioThread.dispose();
+		audioUtil.dispose();
 	}
 }

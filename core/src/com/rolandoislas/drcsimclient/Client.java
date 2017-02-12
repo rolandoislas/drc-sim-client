@@ -3,22 +3,28 @@ package com.rolandoislas.drcsimclient;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.rolandoislas.drcsimclient.audio.Audio;
 import com.rolandoislas.drcsimclient.control.Control;
 import com.rolandoislas.drcsimclient.net.Sockets;
+import com.rolandoislas.drcsimclient.stage.Stage;
 import com.rolandoislas.drcsimclient.stage.StageConnect;
+import com.rolandoislas.drcsimclient.stage.StageControl;
 
 public class Client extends ApplicationAdapter {
+	public static Audio audio;
 	private static Stage stage;
 	public static Sockets sockets;
 	public static Control[] controls;
 
-	public Client(Control[] controls) {
+	public Client(Control[] controls, Audio audio) {
 		Client.controls = controls;
+		Client.audio = audio;
 	}
 
 	@Override
 	public void create () {
+		sockets = new Sockets();
+		stage = new Stage();
 		setStage(new StageConnect());
 	}
 
@@ -33,8 +39,8 @@ public class Client extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		super.dispose();
-		if (sockets != null)
-			sockets.close();
+		stage.dispose();
+		sockets.dispose();
 	}
 
 	@Override
@@ -45,20 +51,18 @@ public class Client extends ApplicationAdapter {
 	@Override
 	public void resume() {
 		super.resume();
+		if (stage instanceof StageControl)
+			setStage(new StageControl());
 	}
 
 	public static void setStage(Stage stage) {
-		if (Client.stage != null)
-			Client.stage.dispose();
+		Client.stage.dispose();
 		Client.stage = stage;
 		Gdx.input.setInputProcessor(stage);
 	}
 
 	public static boolean connect(String ip) {
-		// Sockets
-		if (sockets != null)
-			sockets.close();
-		sockets = new Sockets();
+		sockets.dispose();
 		sockets.setIp(ip);
 		try {
 			sockets.connect();

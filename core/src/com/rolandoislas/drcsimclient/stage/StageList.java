@@ -103,7 +103,7 @@ public class StageList extends Stage {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				try {
-					Client.setStage((com.badlogic.gdx.scenes.scene2d.Stage) stage.newInstance());
+					Client.setStage((Stage) stage.newInstance());
 				} catch (InstantiationException e) {
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {

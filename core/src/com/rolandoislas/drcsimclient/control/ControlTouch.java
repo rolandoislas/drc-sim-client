@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
-import com.rolandoislas.drcsimclient.Util.TextureUtil;
+import com.rolandoislas.drcsimclient.graphics.TextureUtil;
 import com.rolandoislas.drcsimclient.data.Constants;
 import com.rolandoislas.drcsimclient.stage.StageControl;
 

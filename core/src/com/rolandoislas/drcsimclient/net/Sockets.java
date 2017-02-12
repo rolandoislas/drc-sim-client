@@ -99,7 +99,7 @@ public class Sockets {
 		sendCommand(Constants.COMMAND_INPUT_TOUCH, Codec.encodeInput(new int[][] {touchCoords, screenSize}));
 	}
 
-	public void close() {
+	public void dispose() {
 		if (socketCmd != null) {
 			socketCmd.disconnect();
 			socketCmd.close();
@@ -119,5 +119,9 @@ public class Sockets {
 			}
 		}
 		NetUtil.clear();
+	}
+
+	public String getIp() {
+		return ip;
 	}
 }

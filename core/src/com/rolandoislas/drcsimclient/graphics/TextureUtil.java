@@ -1,4 +1,4 @@
-package com.rolandoislas.drcsimclient.Util;
+package com.rolandoislas.drcsimclient.graphics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;

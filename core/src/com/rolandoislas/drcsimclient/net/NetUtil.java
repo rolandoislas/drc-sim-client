@@ -1,6 +1,7 @@
 package com.rolandoislas.drcsimclient.net;
 
 import com.google.common.primitives.Bytes;
+import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.data.Constants;
 
 import java.io.BufferedInputStream;
@@ -20,6 +21,14 @@ public class NetUtil {
 	private static boolean pingSent = false;
 
 	public static byte[] recv(Socket socket, String bufferId) throws IOException {
+		try {
+			return _recv(socket, bufferId);
+		} catch (NullPointerException ignore) {
+			throw new IOException("Disconnected");
+		}
+	}
+
+	private static byte[] _recv(Socket socket, String bufferId) throws IOException {
 		BufferedInputStream inStream = new BufferedInputStream(socket.getInputStream());
 		if (!buffers.containsKey(bufferId))
 			buffers.put(bufferId, new byte[0]);
@@ -34,6 +43,7 @@ public class NetUtil {
 			}
 			if (time >= 5000 && !pingSent) {
 				sockets.sendCommand(Constants.COMMAND_PING);
+				Client.connect(sockets.getIp());
 				pingSent = true;
 			}
 			// Timeout
