@@ -71,7 +71,7 @@ task run(type: Exec) {
     }
 
     def adb = path + "/platform-tools/adb"
-    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.rolandoislas.drcsimclient/com.rolandoislas.drcsimclient.AndroidLauncher'
+    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.rolandoislas.drcsimclient/com.rolandoislas.drcsimclient.android.AndroidLauncher'
 }
 
 // sets up the Android Eclipse project, using the old Ant based build.

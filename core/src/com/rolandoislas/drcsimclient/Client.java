@@ -1,5 +1,6 @@
 package com.rolandoislas.drcsimclient;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -46,6 +47,8 @@ public class Client extends ApplicationAdapter {
 	@Override
 	public void pause() {
 		super.pause();
+		if (Gdx.app.getType() == Application.ApplicationType.Android)
+			setStage(new StageConnect());
 	}
 
 	@Override
