@@ -12,7 +12,7 @@ and communication with the Wii U then creates a server for the client.
 
 # Releases
 
-- [Desktop] (Windows/OS X/Linux/Java enabled Toaster)
+- [Desktop] \(Windows/OS X/Linux/Java enabled Toaster\)
 - [Android]
 - iOS - maybe - Bitcoin `1QA9sY8SDBfSVtPGzctAMVAxUzSQSS8Fx9`
 
