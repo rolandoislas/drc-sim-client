@@ -1,16 +1,17 @@
 package com.rolandoislas.drcsimclient.stage;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.rolandoislas.drcsimclient.Client;
+import com.rolandoislas.drcsimclient.graphics.TextUtil;
 
 import java.util.ArrayList;
 
@@ -28,7 +29,10 @@ public class StageList extends Stage {
 		Skin listSkin = new Skin();
 		listSkin.add("selection", new Texture("image/textfield-selection.png"));
 		List.ListStyle listStyle = new List.ListStyle();
-		listStyle.font = new BitmapFont(Gdx.files.internal("font/collvetica.fnt"));
+		if (Gdx.app.getType() == Application.ApplicationType.Desktop)
+			listStyle.font = TextUtil.generateScaledFont(1f);
+		else
+			listStyle.font = TextUtil.generateScaledFont(2f);
 		listStyle.fontColorUnselected = new Color(1, 1, 1, 1);
 		listStyle.fontColorSelected = new Color(.5f, .5f, .5f, 1);
 		listStyle.selection = listSkin.getDrawable("selection");
@@ -47,7 +51,7 @@ public class StageList extends Stage {
 		addActor(scrollPane);
 		// Title
 		Label.LabelStyle labelStyle = new Label.LabelStyle();
-		labelStyle.font = listStyle.font;
+		labelStyle.font = TextUtil.generateScaledFont(1f);
 		labelStyle.fontColor = listStyle.fontColorSelected;
 		labelStyle.background = listStyle.selection;
 		title = new Label("", labelStyle);
@@ -59,7 +63,7 @@ public class StageList extends Stage {
 		Skin selectBoxSkin = new Skin();
 		selectBoxSkin.add("background", new Texture("image/textfield-selection.png"));
 		SelectBox.SelectBoxStyle selectBoxStyle = new SelectBox.SelectBoxStyle();
-		selectBoxStyle.font = new BitmapFont(Gdx.files.internal("font/collvetica.fnt"));
+		selectBoxStyle.font = TextUtil.generateScaledFont(1f);
 		selectBoxStyle.fontColor = new Color(0, 0, 0, 1);
 		selectBoxStyle.disabledFontColor = selectBoxStyle.fontColor;
 		selectBoxStyle.background = selectBoxSkin.getDrawable("background");

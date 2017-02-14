@@ -22,9 +22,9 @@ public class Sockets {
 	public void connect() throws Exception {
 		try {
 			this.socketVid = new Socket();
-			this.socketVid.connect(new InetSocketAddress(InetAddress.getByName(ip), Constants.PORT_SERVER_VID), 5);
+			this.socketVid.connect(new InetSocketAddress(InetAddress.getByName(ip), Constants.PORT_SERVER_VID), 1500);
 			this.socketAud = new Socket();
-			this.socketAud.connect(new InetSocketAddress(InetAddress.getByName(ip), Constants.PORT_SERVER_AUD), 5);
+			this.socketAud.connect(new InetSocketAddress(InetAddress.getByName(ip), Constants.PORT_SERVER_AUD), 1500);
 			this.socketCmd = new DatagramSocket();
 			this.socketCmd.setSoTimeout(1);
 			sendCommand(Constants.COMMAND_REGISTER);

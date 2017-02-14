@@ -1,6 +1,7 @@
 package com.rolandoislas.drcsimclient.desktop;
 
 import com.badlogic.gdx.Files;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.rolandoislas.drcsimclient.Client;
@@ -16,8 +17,10 @@ public class DesktopLauncher {
 		config.height = 720;
 		config.title = "DRC Sim";
 		config.backgroundFPS = 30;
-		//config.addIcon("image/icon-512.png", Files.FileType.Internal);
-		config.addIcon("image/icon-256.png", Files.FileType.Internal);
+		if (System.getProperties().getProperty("os.name").toLowerCase().contains("mac")) {
+			config.addIcon("image/icon-512.png", Files.FileType.Internal);
+			config.addIcon("image/icon-256.png", Files.FileType.Internal);
+		}
 		config.addIcon("image/icon-32.png", Files.FileType.Internal);
 		config.addIcon("image/icon-16.png", Files.FileType.Internal);
 		Control[] controls = new Control[] {new ControlKeyboard(), new ControlController()};

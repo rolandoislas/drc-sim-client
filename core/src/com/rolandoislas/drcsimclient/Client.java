@@ -10,6 +10,7 @@ import com.rolandoislas.drcsimclient.net.Sockets;
 import com.rolandoislas.drcsimclient.stage.Stage;
 import com.rolandoislas.drcsimclient.stage.StageConnect;
 import com.rolandoislas.drcsimclient.stage.StageControl;
+import com.rolandoislas.drcsimclient.stage.StageLoad;
 
 public class Client extends ApplicationAdapter {
 	public static Audio audio;
@@ -26,7 +27,7 @@ public class Client extends ApplicationAdapter {
 	public void create () {
 		sockets = new Sockets();
 		stage = new Stage();
-		setStage(new StageConnect());
+		setStage(new StageLoad());
 	}
 
 	@Override
