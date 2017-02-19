@@ -109,11 +109,19 @@ public class StageConnect extends Stage {
 		addActor(infoButton);
 	}
 
+	@Override
+	public void act() {
+		// Check IP CLI arg
+		if (!Client.args.ip.isEmpty())
+			connect();
+	}
+
 	private void connect() {
 		Gdx.input.setOnscreenKeyboardVisible(false);
 		lastHostPreferences.putString("lastHost", textfield.getText());
 		lastHostPreferences.flush();
-		if (Client.connect(textfield.getText()))
+		String ip = Client.args.ip.isEmpty() ? textfield.getText() : Client.args.ip;
+		if (Client.connect(ip))
 			Client.setStage(new StageControl());
 	}
 

@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.rolandoislas.drcsimclient.audio.Audio;
 import com.rolandoislas.drcsimclient.control.Control;
+import com.rolandoislas.drcsimclient.data.ArgumentParser;
 import com.rolandoislas.drcsimclient.net.Sockets;
 import com.rolandoislas.drcsimclient.stage.Stage;
 import com.rolandoislas.drcsimclient.stage.StageConnect;
@@ -13,14 +14,20 @@ import com.rolandoislas.drcsimclient.stage.StageControl;
 import com.rolandoislas.drcsimclient.stage.StageLoad;
 
 public class Client extends ApplicationAdapter {
+	public static ArgumentParser args;
 	public static Audio audio;
 	private static Stage stage;
 	public static Sockets sockets;
 	public static Control[] controls;
 
-	public Client(Control[] controls, Audio audio) {
+	public Client(Control[] controls, Audio audio, ArgumentParser argumentParser) {
 		Client.controls = controls;
 		Client.audio = audio;
+		Client.args = argumentParser;
+	}
+
+	public Client(Control[] controls, Audio audio) {
+		this(controls, audio, new ArgumentParser());
 	}
 
 	@Override
