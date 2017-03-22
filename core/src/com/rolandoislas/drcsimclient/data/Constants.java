@@ -1,5 +1,7 @@
 package com.rolandoislas.drcsimclient.data;
 
+import java.io.File;
+
 /**
  * Created by Rolando on 12/21/2016.
  */
@@ -35,4 +37,7 @@ public class Constants {
 	public static final int BUTTON_RIGHT = 0x400;
 	public static final int BUTTON_DOWN = 0x100;
 	public static final int BUTTON_UP = 0x200;
+	// Path
+	private static final File PATH_ROOT = new File(System.getProperty("user.home"), ".drc-sim/");
+    public static final File PATH_LOG = new File(PATH_ROOT, "log");
 }

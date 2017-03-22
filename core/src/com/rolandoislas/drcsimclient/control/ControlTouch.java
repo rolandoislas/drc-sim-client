@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.rolandoislas.drcsimclient.config.ConfigTouch;
 import com.rolandoislas.drcsimclient.graphics.TextureUtil;
 import com.rolandoislas.drcsimclient.data.Constants;
 import com.rolandoislas.drcsimclient.stage.StageControl;
@@ -23,9 +24,12 @@ public class ControlTouch implements Control {
 	private TextButton buttonHome;
 	private Button buttonLeftTrigger;
 	private Button buttonRightTrigger;
+	private ConfigTouch config;
 
 	@Override
 	public void init(StageControl stage) {
+		config = new ConfigTouch();
+		config.load();
 		// Touchpad
 		float x = Gdx.graphics.getWidth() * (100f / 2560);
 		float y = Gdx.graphics.getHeight() * (100f / 1440);
@@ -81,7 +85,7 @@ public class ControlTouch implements Control {
 	@Override
 	public void update() {
 		// Check touchpad (joystick) input
-		if (touchpad.isTouched())
+		if (config.touchScreen == 1 && touchpad.isTouched())
 			sockets.sendJoystickInput(touchpad.getKnobPercentX(), touchpad.getKnobPercentY() * -1);
 		// Check buttons
 		int buttonBits = 0;
@@ -96,5 +100,11 @@ public class ControlTouch implements Control {
 		if (buttonRightTrigger.isPressed())
 			buttonBits |= Constants.BUTTON_R;
 		sockets.sendButtonInput(buttonBits);
+	}
+
+	@Override
+	public void vibrate(int milliseconds) {
+		if (config.vibrate == 1)
+			Gdx.input.vibrate(milliseconds);
 	}
 }

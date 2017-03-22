@@ -3,6 +3,7 @@ package com.rolandoislas.drcsimclient.net;
 import com.google.common.primitives.Bytes;
 import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.data.Constants;
+import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -38,10 +39,12 @@ public class NetUtil {
 			// Disconnected
 			long time = System.currentTimeMillis() - timestamps.get(bufferId);
 			if (time >= 10000) {
+				Logger.debug("Disconnected from server");
 				clear();
 				throw new IOException("Disconnected");
 			}
 			if (time >= 5000 && !pingSent) {
+				Logger.debug("Sending PING command to server");
 				sockets.sendCommand(Constants.COMMAND_PING);
 				Client.connect(sockets.getIp());
 				pingSent = true;

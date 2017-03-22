@@ -9,4 +9,6 @@ public interface Control {
 	void init(StageControl stage);
 
 	void update();
+
+    void vibrate(int milliseconds);
 }

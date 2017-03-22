@@ -71,4 +71,9 @@ public class ControlController implements Control {
 		sockets.sendButtonInput(buttonBits);
 		sockets.sendJoystickInput(axes);
 	}
+
+	@Override
+	public void vibrate(int milliseconds) {
+
+	}
 }

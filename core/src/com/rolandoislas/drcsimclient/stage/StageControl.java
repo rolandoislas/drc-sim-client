@@ -85,8 +85,9 @@ public class StageControl extends Stage {
 		// Handle command
 		if (command[0].equals(Constants.COMMAND_PONG))
 			NetUtil.resetTimeout();
-		else if (command[0].equals(Constants.COMMAND_VIBRATE) && false)
-			Gdx.input.vibrate(1000);
+		else if (command[0].equals(Constants.COMMAND_VIBRATE))
+			for (Control control : controls)
+				control.vibrate(1000);
 	}
 
 	private void updateWiiVideoFrame() {
@@ -114,5 +115,6 @@ public class StageControl extends Stage {
 		spritebatch.dispose();
 		audioThread.dispose();
 		audioUtil.dispose();
+		sockets.dispose();
 	}
 }
