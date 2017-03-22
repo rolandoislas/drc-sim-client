@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.audio.AudioThread;
 import com.rolandoislas.drcsimclient.audio.AudioUtil;
 import com.rolandoislas.drcsimclient.control.Control;
@@ -86,8 +85,9 @@ public class StageControl extends Stage {
 		// Handle command
 		if (command[0].equals(Constants.COMMAND_PONG))
 			NetUtil.resetTimeout();
-		else if (command[0].equals(Constants.COMMAND_VIBRATE) && false)
-			Gdx.input.vibrate(1000);
+		else if (command[0].equals(Constants.COMMAND_VIBRATE))
+			for (Control control : controls)
+				control.vibrate(1000);
 	}
 
 	private void updateWiiVideoFrame() {

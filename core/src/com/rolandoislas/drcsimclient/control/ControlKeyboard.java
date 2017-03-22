@@ -61,4 +61,9 @@ public class ControlKeyboard implements Control {
 		// Joystick
 		// TODO get joystick input based on mouse capture
 	}
+
+	@Override
+	public void vibrate(int milliseconds) {
+
+	}
 }
