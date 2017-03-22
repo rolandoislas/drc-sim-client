@@ -137,4 +137,9 @@ public class ControlBeam implements Control {
 		if (!run && !Client.args.apiBeam.isEmpty())
 			Client.setStage(new StageControl());
 	}
+
+	@Override
+	public void vibrate(int milliseconds) {
+
+	}
 }
