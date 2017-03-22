@@ -56,8 +56,6 @@ public class Client extends ApplicationAdapter {
 	@Override
 	public void resume() {
 		super.resume();
-		if (stage instanceof StageControl)
-			setStage(new StageControl());
 	}
 
 	public static void setStage(Stage stage) {

@@ -22,9 +22,9 @@ public class Sockets {
 	public void connect() throws Exception {
 		try {
 			this.socketVid = new Socket();
-			this.socketVid.connect(new InetSocketAddress(InetAddress.getByName(ip), Constants.PORT_SERVER_VID), 1500);
+			this.socketVid.connect(new InetSocketAddress(InetAddress.getByName(ip), Constants.PORT_SERVER_VID), 5000);
 			this.socketAud = new Socket();
-			this.socketAud.connect(new InetSocketAddress(InetAddress.getByName(ip), Constants.PORT_SERVER_AUD), 1500);
+			this.socketAud.connect(new InetSocketAddress(InetAddress.getByName(ip), Constants.PORT_SERVER_AUD), 5000);
 			this.socketCmd = new DatagramSocket();
 			this.socketCmd.setSoTimeout(1);
 			sendCommand(Constants.COMMAND_REGISTER);
@@ -100,18 +100,18 @@ public class Sockets {
 	}
 
 	public void dispose() {
-		if (socketCmd != null) {
+		if (socketCmd != null && !socketCmd.isClosed()) {
 			socketCmd.disconnect();
 			socketCmd.close();
 		}
-		if (socketVid != null) {
+		if (socketVid != null && !socketVid.isClosed()) {
 			try {
 				socketVid.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		if (socketAud != null) {
+		if (socketAud != null && !socketAud.isClosed()) {
 			try {
 				socketAud.close();
 			} catch (IOException e) {
