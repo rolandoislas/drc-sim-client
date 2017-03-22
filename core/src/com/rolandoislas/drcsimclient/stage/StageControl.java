@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.audio.AudioThread;
 import com.rolandoislas.drcsimclient.audio.AudioUtil;
 import com.rolandoislas.drcsimclient.control.Control;
@@ -114,5 +115,6 @@ public class StageControl extends Stage {
 		spritebatch.dispose();
 		audioThread.dispose();
 		audioUtil.dispose();
+		sockets.dispose();
 	}
 }

@@ -11,6 +11,7 @@ import com.rolandoislas.drcsimclient.stage.Stage;
 import com.rolandoislas.drcsimclient.stage.StageConnect;
 import com.rolandoislas.drcsimclient.stage.StageControl;
 import com.rolandoislas.drcsimclient.stage.StageLoad;
+import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 public class Client extends ApplicationAdapter {
 	public static Audio audio;
@@ -60,6 +61,7 @@ public class Client extends ApplicationAdapter {
 	}
 
 	public static void setStage(Stage stage) {
+		Logger.debug("Setting stage to %1$s", stage.getClass().getSimpleName());
 		Client.stage.dispose();
 		Client.stage = stage;
 		Gdx.input.setInputProcessor(stage);
