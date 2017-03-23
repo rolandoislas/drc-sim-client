@@ -1,0 +1,17 @@
+language: android
+
+android:
+  components:
+    - build-tools-25.0.2
+    - android-25
+
+install: true
+
+before_script:
+- chmod +x gradlew
+
+script:
+- ./gradlew android:build
+- ./gradlew desktop:build
+
+
