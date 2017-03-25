@@ -1,7 +1,9 @@
-package com.rolandoislas.drcsimclient;
+package com.rolandoislas.ios;
 
+import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.control.Control;
 import com.rolandoislas.drcsimclient.control.ControlTouch;
+import com.rolandoislas.ios.audio.Audio;
 import org.robovm.apple.foundation.NSAutoreleasePool;
 import org.robovm.apple.uikit.UIApplication;
 
@@ -13,7 +15,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
     protected IOSApplication createApplication() {
         IOSApplicationConfiguration config = new IOSApplicationConfiguration();
         Control[] controls = new Control[] {new ControlTouch()};
-        return new IOSApplication(new Client(controls), config);
+        return new IOSApplication(new Client(controls, new Audio()), config);
     }
 
     public static void main(String[] argv) {
