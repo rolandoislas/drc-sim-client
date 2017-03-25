@@ -22,6 +22,9 @@ android {
         minSdkVersion 9
         targetSdkVersion 25
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 
