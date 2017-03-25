@@ -1,12 +1,11 @@
 package com.rolandoislas.drcsimclient.desktop;
 
 import com.badlogic.gdx.Files;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.control.Control;
-import com.rolandoislas.drcsimclient.control.ControlBeam;
+import com.rolandoislas.drcsimclient.desktop.control.ControlBeam;
 import com.rolandoislas.drcsimclient.control.ControlController;
 import com.rolandoislas.drcsimclient.control.ControlKeyboard;
 import com.rolandoislas.drcsimclient.data.ArgumentParser;

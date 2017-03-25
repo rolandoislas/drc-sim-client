@@ -1,6 +1,7 @@
-package com.rolandoislas.drcsimclient.control;
+package com.rolandoislas.drcsimclient.desktop.control;
 
 import com.rolandoislas.drcsimclient.Client;
+import com.rolandoislas.drcsimclient.control.Control;
 import com.rolandoislas.drcsimclient.data.Constants;
 import com.rolandoislas.drcsimclient.stage.StageControl;
 import pro.beam.api.BeamAPI;

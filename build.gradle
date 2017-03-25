@@ -52,6 +52,8 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        compile "pro.beam:api:$beamApiVersion"
+        compile "pro.beam:interactive:$beamInteractiveVersion"
     }
 }
 
@@ -104,8 +106,6 @@ project(":core") {
         compile "com.google.guava:guava:$guavaVersion"
         compile "com.google.code.gson:gson:$gsonVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile "pro.beam:api:$beamApiVersion"
-        compile "pro.beam:interactive:$beamInteractiveVersion"
     }
 }
 
