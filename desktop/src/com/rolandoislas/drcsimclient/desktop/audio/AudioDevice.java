@@ -22,8 +22,14 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
             line = (SourceDataLine) AudioSystem.getLine(info);
             line.open(af, 4096);
             line.start();
-        } catch (LineUnavailableException e) {
+        }
+        catch (IllegalArgumentException e) {
             Logger.exception(e);
+            Logger.warn("Audio format not supported by system.");
+        }
+        catch (LineUnavailableException e) {
+            Logger.exception(e);
+            Logger.warn("Audio format not supported by system.");
         }
         new Thread(new Runnable() {
             @Override
@@ -31,6 +37,12 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
                 Logger.debug("Audio playback thread started");
                 while (running)
                     writeLoop();
+                Logger.debug("Closing audio line");
+                if (line != null && line.isOpen()) {
+                    line.drain();
+                    line.stop();
+                    line.close();
+                }
                 Logger.debug("Audio playback thread stopped");
             }
         }, "Audio Playback Thread").start();
@@ -55,11 +67,6 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
     @Override
     public void dispose() {
         running = false;
-        if (line != null && line.isOpen()) {
-            line.drain();
-            line.stop();
-            line.close();
-        }
     }
 
     @Override
@@ -74,7 +81,7 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
                 line.write(data, start, stop);
             }
             catch (IllegalArgumentException e) {
-                e.printStackTrace();
+                Logger.exception(e);
             }
     }
 }
