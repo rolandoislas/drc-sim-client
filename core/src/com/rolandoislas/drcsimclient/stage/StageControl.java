@@ -12,6 +12,7 @@ import com.rolandoislas.drcsimclient.control.Control;
 import com.rolandoislas.drcsimclient.data.Constants;
 import com.rolandoislas.drcsimclient.net.Codec;
 import com.rolandoislas.drcsimclient.net.NetUtil;
+import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -82,6 +83,10 @@ public class StageControl extends Stage {
 			sockets.socketCmd.receive(packet);
 		} catch (IOException ignore) {}
 		String[] command = Codec.decodeCommand(packet);
+		if (command[0].isEmpty())
+			return;
+		Logger.debug("Received command %1$s", command[0]);
+		Logger.extra("Received command %1$s with data %2$s", command[0], command[1]);
 		// Handle command
 		if (command[0].equals(Constants.COMMAND_PONG))
 			NetUtil.resetTimeout();
@@ -99,12 +104,16 @@ public class StageControl extends Stage {
 				wiiImage.dispose();
 			wiiImage = new Texture(pixmap);
 			pixmap.dispose();
-		} catch (IOException e) {
-			if (e.getMessage().contains("Disconnected"))
-				setStage(new StageConnect("Disconnected"));
 		} catch (GdxRuntimeException e) {
-			e.printStackTrace();
+			Logger.info("Received incompatible image data from server.");
+			Logger.exception(e);
 			wiiImage = new Texture("image/placeholder.png");
+		} catch (NetUtil.ReadTimeoutException ignore) {
+
+		} catch (NetUtil.DisconnectedException e) {
+			Logger.exception(e);
+			Logger.info("Disconnected");
+			setStage(new StageConnect("Disconnected"));
 		}
 	}
 

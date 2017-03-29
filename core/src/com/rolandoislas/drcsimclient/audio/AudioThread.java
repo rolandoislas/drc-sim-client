@@ -1,6 +1,7 @@
 package com.rolandoislas.drcsimclient.audio;
 
 import com.rolandoislas.drcsimclient.net.NetUtil;
+import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 import java.io.IOException;
 
@@ -23,9 +24,11 @@ public class AudioThread extends Thread {
             try {
                 byte[] packet = NetUtil.recv(sockets.socketAud, "audio");
                 audioUtil.addData(packet);
-            } catch (IOException e) {
-                if (e.getMessage().contains("Disconnected"))
-                    dispose();
+            } catch (NetUtil.ReadTimeoutException ignore) {
+
+            } catch (NetUtil.DisconnectedException e) {
+                Logger.exception(e);
+                running = false;
             }
         }
     }

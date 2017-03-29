@@ -57,14 +57,15 @@ public class Logger {
     }
 
     public static void exception(Exception e) {
-        extra(Arrays.toString(e.getStackTrace()));
+        if (logger.isLoggable(Level.FINER))
+            e.printStackTrace();
     }
 
-    private static void extra(String message, Object... o) {
+    public static void extra(String message, Object... o) {
         logger.log(Level.FINER, message, o);
     }
 
-    private static void verbose(String message, Object... o) {
+    public static void verbose(String message, Object... o) {
         logger.log(Level.FINEST, message, o);
     }
 
