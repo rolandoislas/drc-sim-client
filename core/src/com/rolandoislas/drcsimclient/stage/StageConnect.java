@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.graphics.TextUtil;
+import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 /**
  * Created by Rolando on 12/29/2016.
@@ -60,12 +61,24 @@ public class StageConnect extends Stage {
 		Label.LabelStyle errorLabelStyle = new Label.LabelStyle();
 		errorLabelStyle.font = TextUtil.generateScaledFont(1);
 		errorLabelStyle.fontColor = textfieldStyle.fontColor;
-		Label labelError = new Label(message, errorLabelStyle);
+		final Label labelError = new Label(message, errorLabelStyle);
 		float iconSize = Gdx.graphics.getWidth() * .1f;
 		labelError.setBounds(iconSize, 10, Gdx.graphics.getWidth() - iconSize * 2,
 				Gdx.graphics.getHeight() * .1f);
 		labelError.setAlignment(Align.center);
 		addActor(labelError);
+		// Set the error label text to an empty string after a few seconds
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(3500);
+				} catch (InterruptedException e) {
+					Logger.exception(e);
+				}
+				labelError.setText("");
+			}
+		}).start();
 		// Settings Button
 		Skin settingsButtonSkin = new Skin();
 		settingsButtonSkin.add("image", new Texture("image/settings-icon.png"));

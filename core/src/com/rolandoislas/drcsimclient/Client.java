@@ -78,6 +78,9 @@ public class Client extends ApplicationAdapter {
 		try {
 			sockets.connect();
 		} catch (Exception e) {
+			Logger.info("Failed to connect to host \"%1$s\"", ip);
+			Logger.info(e.getMessage());
+			Logger.exception(e);
 			setStage(new StageConnect(e.getMessage()));
 			return false;
 		}

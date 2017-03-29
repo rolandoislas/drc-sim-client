@@ -49,7 +49,7 @@ public class Logger {
     }
 
     public static void debug(String message, Object... o) {
-        logger.log(Level.FINE, String.format(message, o));
+        logger.log(Level.FINE, message, o);
     }
 
     public static void info(String message, Object... o) {
@@ -75,7 +75,7 @@ public class Logger {
             return new Date(logRecord.getMillis()).toString() + " " +
                     logRecord.getLevel() + ":" +
                     logRecord.getLoggerName() + " " +
-                    logRecord.getMessage() + "\n";
+                    String.format(logRecord.getMessage(), logRecord.getParameters()) + "\n";
         }
     }
 }
