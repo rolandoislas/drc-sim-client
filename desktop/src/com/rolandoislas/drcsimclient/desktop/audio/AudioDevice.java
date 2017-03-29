@@ -55,7 +55,7 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
     @Override
     public void dispose() {
         running = false;
-        if (line != null) {
+        if (line != null && line.isOpen()) {
             line.drain();
             line.stop();
             line.close();
