@@ -55,8 +55,11 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
     @Override
     public void dispose() {
         running = false;
-        if (line != null)
+        if (line != null) {
+            line.drain();
+            line.stop();
             line.close();
+        }
     }
 
     @Override
@@ -66,7 +69,7 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
     }
 
     public void write(byte[] data, int start, int stop) {
-        if (line != null)
+        if (line != null && line.isOpen())
             try {
                 line.write(data, start, stop);
             }
