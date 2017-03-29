@@ -1,5 +1,7 @@
 package com.rolandoislas.drcsimclient.desktop.audio;
 
+import com.rolandoislas.drcsimclient.util.logging.Logger;
+
 import javax.sound.sampled.*;
 
 /**
@@ -21,15 +23,17 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
             line.open(af, 4096);
             line.start();
         } catch (LineUnavailableException e) {
-            e.printStackTrace();
+            Logger.exception(e);
         }
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Logger.debug("Audio playback thread started");
                 while (running)
                     writeLoop();
+                Logger.debug("Audio playback thread stopped");
             }
-        }).start();
+        }, "Audio Playback Thread").start();
     }
 
     private void writeLoop() {
@@ -45,7 +49,7 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
 
     @Override
     public void setVolume(float volume) {
-
+        // TODO volume control
     }
 
     @Override

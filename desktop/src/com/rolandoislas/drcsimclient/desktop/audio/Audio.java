@@ -1,7 +1,5 @@
 package com.rolandoislas.drcsimclient.desktop.audio;
 
-import javax.sound.sampled.*;
-
 /**
  * Created by rolando on 2/11/17.
  */
