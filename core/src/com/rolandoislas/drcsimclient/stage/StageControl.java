@@ -7,15 +7,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.rolandoislas.drcsimclient.audio.AudioThread;
-import com.rolandoislas.drcsimclient.audio.AudioUtil;
 import com.rolandoislas.drcsimclient.control.Control;
 import com.rolandoislas.drcsimclient.data.Constants;
-import com.rolandoislas.drcsimclient.net.Codec;
+import com.rolandoislas.drcsimclient.graphics.VideoThread;
+import com.rolandoislas.drcsimclient.net.CommandThread;
 import com.rolandoislas.drcsimclient.net.NetUtil;
 import com.rolandoislas.drcsimclient.util.logging.Logger;
-
-import java.io.IOException;
-import java.net.DatagramPacket;
 
 import static com.rolandoislas.drcsimclient.Client.*;
 
@@ -23,8 +20,9 @@ import static com.rolandoislas.drcsimclient.Client.*;
  * Created by Rolando on 12/21/2016.
  */
 public class StageControl extends Stage {
-	private final AudioUtil audioUtil;
 	private final AudioThread audioThread;
+	private final VideoThread videoThread;
+	private final CommandThread commandThread;
 	private Texture wiiImage;
 	private SpriteBatch spritebatch;
 	private Button wiiScreen;
@@ -42,9 +40,14 @@ public class StageControl extends Stage {
 		for (Control control : controls)
 			control.init(this);
 		// Audio
-		audioUtil = new AudioUtil();
-		audioThread = new AudioThread(audioUtil);
+		audioThread = new AudioThread();
 		audioThread.start();
+		// Video
+		videoThread = new VideoThread();
+		videoThread.start();
+		// Command
+		commandThread = new CommandThread();
+		commandThread.start();
 	}
 
 	@Override
@@ -77,28 +80,23 @@ public class StageControl extends Stage {
 	}
 
 	private void checkNetworkCommands() {
-		byte[] buf = new byte[1024];
-		DatagramPacket packet = new DatagramPacket(buf, buf.length);
-		try {
-			sockets.socketCmd.receive(packet);
-		} catch (IOException ignore) {}
-		String[] command = Codec.decodeCommand(packet);
-		if (command[0].isEmpty())
-			return;
-		Logger.debug("Received command %1$s", command[0]);
-		Logger.extra("Received command %1$s with data %2$s", command[0], command[1]);
+		CommandThread.Command command = commandThread.getCommand();
 		// Handle command
-		if (command[0].equals(Constants.COMMAND_PONG))
+		if (command.isCommand(Constants.COMMAND_PONG))
 			NetUtil.resetTimeout();
-		else if (command[0].equals(Constants.COMMAND_VIBRATE))
+		else if (command.isCommand(Constants.COMMAND_VIBRATE))
 			for (Control control : controls)
 				control.vibrate(1000);
 	}
 
 	private void updateWiiVideoFrame() {
+		if (!videoThread.isAlive())
+			setStage(new StageConnect("Disconnected"));
 		try {
 			// Get and draw image
-			byte[] data = NetUtil.recv(sockets.socketVid, "video");
+			byte[] data = videoThread.getImageData();
+			if (data.length == 0)
+				return;
 			Pixmap pixmap = new Pixmap(data, 0, data.length);
 			if (wiiImage != null)
 				wiiImage.dispose();
@@ -108,12 +106,6 @@ public class StageControl extends Stage {
 			Logger.info("Received incompatible image data from server.");
 			Logger.exception(e);
 			wiiImage = new Texture("image/placeholder.png");
-		} catch (NetUtil.ReadTimeoutException ignore) {
-
-		} catch (NetUtil.DisconnectedException e) {
-			Logger.exception(e);
-			Logger.info("Disconnected");
-			setStage(new StageConnect("Disconnected"));
 		}
 	}
 
@@ -123,7 +115,8 @@ public class StageControl extends Stage {
 		wiiImage.dispose();
 		spritebatch.dispose();
 		audioThread.dispose();
-		audioUtil.dispose();
+		videoThread.dispose();
+		commandThread.dispose();
 		sockets.dispose();
 	}
 }

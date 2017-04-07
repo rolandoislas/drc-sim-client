@@ -19,6 +19,7 @@ import com.rolandoislas.drcsimclient.util.logging.Logger;
 public class StageConnect extends Stage {
 	private final Preferences lastHostPreferences;
 	private final TextField textfield;
+	private boolean connectOnAct = false;
 
 	public StageConnect(String message) {
 		float marginX = Gdx.graphics.getWidth() * 10f / 720f;
@@ -57,6 +58,17 @@ public class StageConnect extends Stage {
 			}
 		});
 		addActor(connectButton);
+		// Search Button
+		TextButton searchButton = new TextButton("Search", connectButtonStyle);
+		searchButton.setBounds(connectButton.getX() + connectButton.getWidth() + marginX * 6,
+				connectButton.getY(), searchButton.getWidth(), searchButton.getHeight());
+		searchButton.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				Client.setStage(new StageSearch());
+			}
+		});
+		addActor(searchButton);
 		// Error Message
 		Label.LabelStyle errorLabelStyle = new Label.LabelStyle();
 		errorLabelStyle.font = TextUtil.generateScaledFont(1);
@@ -122,10 +134,16 @@ public class StageConnect extends Stage {
 		addActor(infoButton);
 	}
 
+	StageConnect(String hostname, boolean connectOnAct) {
+		this();
+		this.connectOnAct = connectOnAct;
+		textfield.setText(hostname);
+	}
+
 	@Override
 	public void act() {
 		// Check IP CLI arg
-		if (!Client.args.ip.isEmpty())
+		if (!Client.args.ip.isEmpty() || connectOnAct)
 			connect();
 	}
 
@@ -134,7 +152,7 @@ public class StageConnect extends Stage {
 		lastHostPreferences.putString("lastHost", textfield.getText());
 		lastHostPreferences.flush();
 		String ip = Client.args.ip.isEmpty() ? textfield.getText() : Client.args.ip;
-		if (Client.connect(ip))
+		if (Client.connect(ip, true))
 			Client.setStage(new StageControl());
 	}
 

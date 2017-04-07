@@ -19,7 +19,7 @@ public class ArgumentParser {
 		ip = getArgAfter("-ip");
 		apiBeam = getArgAfter("-api-beam");
 		logDebug = hasOption("-d", "--debug");
-		logExtra = hasOption("-e", "--extra");
+		logExtra = hasOption("-e", "--extra", "-f", "--finer");
 		logVerbose = hasOption("-v", "--verbose");
 	}
 

@@ -31,7 +31,7 @@ public class NetUtil {
 			while (!new String(buffers.get(bufferId)).contains(Codec.endDelimiter)) {
 				// Disconnected
 				long time = System.currentTimeMillis() - timestamps.get(bufferId);
-				if (time >= 10000) {
+				if (time >= 10000 && !Client.connect(sockets.getIp(), false)) {
 					Logger.debug("Disconnected from server");
 					clear();
 					throw new DisconnectedException();
@@ -39,7 +39,7 @@ public class NetUtil {
 				if (time >= 5000 && !pingSent) {
 					Logger.debug("Sending PING command to server");
 					sockets.sendCommand(Constants.COMMAND_PING);
-					Client.connect(sockets.getIp());
+					Client.connect(sockets.getIp(), false);
 					pingSent = true;
 				}
 				// Timeout

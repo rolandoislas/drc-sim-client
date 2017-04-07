@@ -10,7 +10,6 @@ import com.rolandoislas.drcsimclient.data.ArgumentParser;
 import com.rolandoislas.drcsimclient.net.Sockets;
 import com.rolandoislas.drcsimclient.stage.Stage;
 import com.rolandoislas.drcsimclient.stage.StageConnect;
-import com.rolandoislas.drcsimclient.stage.StageControl;
 import com.rolandoislas.drcsimclient.stage.StageLoad;
 import com.rolandoislas.drcsimclient.util.logging.Logger;
 
@@ -72,7 +71,7 @@ public class Client extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(stage);
 	}
 
-	public static boolean connect(String ip) {
+	public static boolean connect(String ip, boolean setStageOnFailure) {
 		sockets.dispose();
 		sockets.setIp(ip);
 		try {
@@ -81,7 +80,8 @@ public class Client extends ApplicationAdapter {
 			Logger.info("Failed to connect to host \"%1$s\"", ip);
 			Logger.info(e.getMessage());
 			Logger.exception(e);
-			setStage(new StageConnect(e.getMessage()));
+			if (setStageOnFailure)
+				setStage(new StageConnect(e.getMessage()));
 			return false;
 		}
 		return true;

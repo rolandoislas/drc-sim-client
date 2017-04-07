@@ -3,8 +3,6 @@ package com.rolandoislas.drcsimclient.audio;
 import com.rolandoislas.drcsimclient.net.NetUtil;
 import com.rolandoislas.drcsimclient.util.logging.Logger;
 
-import java.io.IOException;
-
 import static com.rolandoislas.drcsimclient.Client.sockets;
 
 /**
@@ -14,8 +12,9 @@ public class AudioThread extends Thread {
     private final AudioUtil audioUtil;
     private boolean running = true;
 
-    public AudioThread(AudioUtil audioUtil) {
-        this.audioUtil = audioUtil;
+    public AudioThread() {
+        this.audioUtil = new AudioUtil();
+        this.setName("Network Thread: Audio");
     }
 
     @Override
@@ -25,7 +24,11 @@ public class AudioThread extends Thread {
                 byte[] packet = NetUtil.recv(sockets.socketAud, "audio");
                 audioUtil.addData(packet);
             } catch (NetUtil.ReadTimeoutException ignore) {
-
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    Logger.exception(e);
+                }
             } catch (NetUtil.DisconnectedException e) {
                 Logger.exception(e);
                 running = false;
@@ -35,5 +38,6 @@ public class AudioThread extends Thread {
 
     public void dispose() {
         running = false;
+        audioUtil.dispose();
     }
 }
