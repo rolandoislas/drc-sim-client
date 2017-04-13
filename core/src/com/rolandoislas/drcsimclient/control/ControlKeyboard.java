@@ -47,10 +47,6 @@ public class ControlKeyboard implements Control {
 			buttonbits |= Constants.BUTTON_ZL;
 		if (Gdx.input.isKeyPressed(config.buttonZR))
 			buttonbits |= Constants.BUTTON_ZR;
-		if (Gdx.input.isKeyPressed(config.buttonL3))
-			buttonbits |= Constants.BUTTON_L3;
-		if (Gdx.input.isKeyPressed(config.buttonR3))
-			buttonbits |= Constants.BUTTON_R3;
 		if (Gdx.input.isKeyPressed(config.buttonMinus))
 			buttonbits |= Constants.BUTTON_MINUS;
 		if (Gdx.input.isKeyPressed(config.buttonPlus))
@@ -58,6 +54,13 @@ public class ControlKeyboard implements Control {
 		if (Gdx.input.isKeyPressed(config.buttonHome))
 			buttonbits |= Constants.BUTTON_HOME;
 		sockets.sendButtonInput(buttonbits);
+		// L3R3
+		int extraButtonBits = 0;
+		if (Gdx.input.isKeyPressed(config.buttonL3))
+			extraButtonBits |= Constants.BUTTON_L3;
+		if (Gdx.input.isKeyPressed(config.buttonR3))
+			extraButtonBits |= Constants.BUTTON_R3;
+		sockets.sendExtraButtonInput(extraButtonBits);
 		// Joystick
 		// TODO get joystick input based on mouse capture
 	}

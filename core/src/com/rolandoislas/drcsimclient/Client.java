@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.rolandoislas.drcsimclient.audio.Audio;
 import com.rolandoislas.drcsimclient.control.Control;
 import com.rolandoislas.drcsimclient.data.ArgumentParser;
+import com.rolandoislas.drcsimclient.data.Constants;
 import com.rolandoislas.drcsimclient.net.Sockets;
 import com.rolandoislas.drcsimclient.stage.Stage;
 import com.rolandoislas.drcsimclient.stage.StageConnect;
@@ -24,6 +25,7 @@ public class Client extends ApplicationAdapter {
 		Client.controls = controls;
 		Client.audio = audio;
 		Client.args = argumentParser;
+		Logger.info("Starting %1$s version %2$s", Constants.NAME, Constants.VERSION);
 	}
 
 	public Client(Control[] controls, Audio audio) {
