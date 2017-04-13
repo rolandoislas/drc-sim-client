@@ -22,6 +22,7 @@ public class StageSettings extends StageList {
 			if (control instanceof ControlTouch)
 				addStageChangeItem("Touch Settings", StageConfigTouch.class);
 		}
+		addStageChangeItem("General Settings", StageConfigGeneral.class);
 		// Back
 		addStageChangeItem("Back", StageConnect.class);
 	}

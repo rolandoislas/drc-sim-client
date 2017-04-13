@@ -3,17 +3,17 @@ package com.rolandoislas.drcsimclient.stage;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.rolandoislas.drcsimclient.Client;
-import com.rolandoislas.drcsimclient.config.ConfigTouch;
+import com.rolandoislas.drcsimclient.config.ConfigGeneral;
 
 /**
- * Created by rolando on 3/22/17.
+ * Created by rolando on 4/13/17.
  */
-public class StageConfigTouch extends StageList {
-    private final ConfigTouch config;
+public class StageConfigGeneral extends StageList {
+    private final ConfigGeneral config;
 
-    public StageConfigTouch() {
-        setTitle("Touch Settings");
-        config = new ConfigTouch();
+    public StageConfigGeneral() {
+        setTitle("General Settings");
+        config = new ConfigGeneral();
         config.load();
         addItems();
     }
@@ -25,10 +25,10 @@ public class StageConfigTouch extends StageList {
 
     void addItems() {
         getList().clearItems();
-        addItem("Vibrate: " + (config.vibrate == 0 ? "false" : "true"), new ChangeListener() {
+        addItem("Touch Screen: " + (config.touchScreen == 0 ? "false" : "true"), new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                config.set(ConfigTouch.VIBRATE, config.vibrate == 0 ? 1 : 0);
+                config.set(ConfigGeneral.TOUCH_SCREEN, config.touchScreen == 0 ? 1 : 0);
                 addItems();
             }
         });

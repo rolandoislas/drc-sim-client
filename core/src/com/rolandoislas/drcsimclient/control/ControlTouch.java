@@ -85,7 +85,7 @@ public class ControlTouch implements Control {
 	@Override
 	public void update() {
 		// Check touchpad (joystick) input
-		if (config.touchScreen == 1 && touchpad.isTouched())
+		if (touchpad.isTouched())
 			sockets.sendJoystickInput(touchpad.getKnobPercentX(), touchpad.getKnobPercentY() * -1);
 		// Check buttons
 		int buttonBits = 0;

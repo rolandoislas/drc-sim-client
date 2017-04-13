@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.rolandoislas.drcsimclient.audio.AudioThread;
+import com.rolandoislas.drcsimclient.config.ConfigGeneral;
+import com.rolandoislas.drcsimclient.config.ConfigTouch;
 import com.rolandoislas.drcsimclient.control.Control;
 import com.rolandoislas.drcsimclient.data.Constants;
 import com.rolandoislas.drcsimclient.graphics.VideoThread;
@@ -26,9 +28,13 @@ public class StageControl extends Stage {
 	private Texture wiiImage;
 	private SpriteBatch spritebatch;
 	private Button wiiScreen;
+	private ConfigGeneral config;
 
 	public StageControl() {
 		Gdx.input.setCatchBackKey(true);
+		// Config
+		config = new ConfigGeneral();
+		config.load();
 		// Spritebatch
 		spritebatch = new SpriteBatch();
 		// Screen touchable
@@ -72,7 +78,7 @@ public class StageControl extends Stage {
 		// Update wii video frame
 		updateWiiVideoFrame();
 		// Check touch/click screen input
-		if (wiiScreen.isPressed())
+		if (config.touchScreen == 1 && wiiScreen.isPressed())
 			sockets.sendTouchScreenInput(Gdx.input.getX(), Gdx.input.getY());
 		// Update controls
 		for (Control control : controls)
