@@ -26,8 +26,20 @@ public class Codec {
 		return encodedString.getBytes();
 	}
 
+	/**
+	 * Parses a command packet
+	 * @param packet command packet
+	 * @return Returns a string array with the command as the first entry and extra data as the second.
+	 * The second entry will be an empty string on no extra data.
+	 * Both entries will be empty strings if the packet starts with null data.
+	 */
 	public static String[] decodeCommand(DatagramPacket packet) {
-		return new String(packet.getData(), 0, packet.getLength()).split(commandDelimiter);
+		if (packet.getData()[0] == 0x0)
+			return new String[]{"", ""};
+		String[] command = new String(packet.getData(), 0, packet.getLength()).split(commandDelimiter);
+		if (command.length == 1)
+			command = new String[]{command[0], ""};
+		return command;
 	}
 
 	public static String encodeInput(Object o) {

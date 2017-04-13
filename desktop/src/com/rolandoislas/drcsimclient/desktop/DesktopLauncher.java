@@ -1,13 +1,14 @@
 package com.rolandoislas.drcsimclient.desktop;
 
 import com.badlogic.gdx.Files;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.control.Control;
+import com.rolandoislas.drcsimclient.desktop.control.ControlBeam;
 import com.rolandoislas.drcsimclient.control.ControlController;
 import com.rolandoislas.drcsimclient.control.ControlKeyboard;
+import com.rolandoislas.drcsimclient.data.ArgumentParser;
 import com.rolandoislas.drcsimclient.desktop.audio.Audio;
 
 public class DesktopLauncher {
@@ -23,7 +24,8 @@ public class DesktopLauncher {
 		}
 		config.addIcon("image/icon-32.png", Files.FileType.Internal);
 		config.addIcon("image/icon-16.png", Files.FileType.Internal);
-		Control[] controls = new Control[] {new ControlKeyboard(), new ControlController()};
-		new LwjglApplication(new Client(controls, new Audio()), config);
+		Control[] controls = new Control[] {new ControlKeyboard(), new ControlController(),
+				new ControlBeam()};
+		new LwjglApplication(new Client(controls, new Audio(), new ArgumentParser(arg)), config);
 	}
 }

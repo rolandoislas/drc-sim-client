@@ -124,4 +124,14 @@ public class Sockets {
 	public String getIp() {
 		return ip;
 	}
+
+	/**
+	 * Sends extra button input. L3R3, TV
+	 * @param extraButtonBits button flags
+	 */
+	public void sendExtraButtonInput(int extraButtonBits) {
+		if (extraButtonBits == 0)
+			return;
+		sendCommand(Constants.COMMAND_INPUT_BUTTON_EXTRA, Codec.encodeInput(extraButtonBits));
+	}
 }

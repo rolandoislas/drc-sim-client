@@ -1,5 +1,7 @@
 package com.rolandoislas.drcsimclient.desktop.audio;
 
+import com.rolandoislas.drcsimclient.util.logging.Logger;
+
 import javax.sound.sampled.*;
 
 /**
@@ -20,16 +22,30 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
             line = (SourceDataLine) AudioSystem.getLine(info);
             line.open(af, 4096);
             line.start();
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
+        }
+        catch (IllegalArgumentException e) {
+            Logger.exception(e);
+            Logger.warn("Audio format not supported by system.");
+        }
+        catch (LineUnavailableException e) {
+            Logger.exception(e);
+            Logger.warn("Audio format not supported by system.");
         }
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Logger.debug("Audio playback thread started");
                 while (running)
                     writeLoop();
+                Logger.debug("Closing audio line");
+                if (line != null && line.isOpen()) {
+                    line.drain();
+                    line.stop();
+                    line.close();
+                }
+                Logger.debug("Audio playback thread stopped");
             }
-        }).start();
+        }, "Audio Playback Thread").start();
     }
 
     private void writeLoop() {
@@ -45,14 +61,12 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
 
     @Override
     public void setVolume(float volume) {
-
+        // TODO volume control
     }
 
     @Override
     public void dispose() {
         running = false;
-        if (line != null)
-            line.close();
     }
 
     @Override
@@ -62,12 +76,12 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
     }
 
     public void write(byte[] data, int start, int stop) {
-        if (line != null)
+        if (line != null && line.isOpen())
             try {
                 line.write(data, start, stop);
             }
             catch (IllegalArgumentException e) {
-                e.printStackTrace();
+                Logger.exception(e);
             }
     }
 }

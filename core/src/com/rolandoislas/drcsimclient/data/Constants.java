@@ -6,6 +6,9 @@ import java.io.File;
  * Created by Rolando on 12/21/2016.
  */
 public class Constants {
+	// Info
+	public static final String NAME = "DRC Sim Client";
+	public static final String VERSION = "1.1";
 	// Ports
 	public static final int PORT_SERVER_VID = 50000;
 	public static final int PORT_SERVER_AUD = 50001;
@@ -13,7 +16,7 @@ public class Constants {
 	// Commands
 	public static final String COMMAND_REGISTER = "REGISTER";
 	public static final String COMMAND_INPUT_BUTTON = "INPUT_BUTTON";
-	public static final String COMMAND_INPUT_L3R3 = "INPUT_L3R3";
+	public static final String COMMAND_INPUT_BUTTON_EXTRA = "INPUT_L3R3"; // TODO rename on server
 	public static final String COMMAND_INPUT_TOUCH = "INPUT_TOUCH";
 	public static final String COMMAND_INPUT_JOYSTICK = "INPUT_JOYSTICK";
 	public static final String COMMAND_VIBRATE = "VIBRATE";

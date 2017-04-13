@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.graphics.TextUtil;
+import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 /**
  * Created by Rolando on 12/29/2016.
@@ -18,6 +19,7 @@ import com.rolandoislas.drcsimclient.graphics.TextUtil;
 public class StageConnect extends Stage {
 	private final Preferences lastHostPreferences;
 	private final TextField textfield;
+	private boolean connectOnAct = false;
 
 	public StageConnect(String message) {
 		float marginX = Gdx.graphics.getWidth() * 10f / 720f;
@@ -56,16 +58,39 @@ public class StageConnect extends Stage {
 			}
 		});
 		addActor(connectButton);
+		// Search Button
+		TextButton searchButton = new TextButton("Search", connectButtonStyle);
+		searchButton.setBounds(connectButton.getX() + connectButton.getWidth() + marginX * 6,
+				connectButton.getY(), searchButton.getWidth(), searchButton.getHeight());
+		searchButton.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				Client.setStage(new StageSearch());
+			}
+		});
+		addActor(searchButton);
 		// Error Message
 		Label.LabelStyle errorLabelStyle = new Label.LabelStyle();
 		errorLabelStyle.font = TextUtil.generateScaledFont(1);
 		errorLabelStyle.fontColor = textfieldStyle.fontColor;
-		Label labelError = new Label(message, errorLabelStyle);
+		final Label labelError = new Label(message, errorLabelStyle);
 		float iconSize = Gdx.graphics.getWidth() * .1f;
 		labelError.setBounds(iconSize, 10, Gdx.graphics.getWidth() - iconSize * 2,
 				Gdx.graphics.getHeight() * .1f);
 		labelError.setAlignment(Align.center);
 		addActor(labelError);
+		// Set the error label text to an empty string after a few seconds
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(3500);
+				} catch (InterruptedException e) {
+					Logger.exception(e);
+				}
+				labelError.setText("");
+			}
+		}).start();
 		// Settings Button
 		Skin settingsButtonSkin = new Skin();
 		settingsButtonSkin.add("image", new Texture("image/settings-icon.png"));
@@ -109,11 +134,25 @@ public class StageConnect extends Stage {
 		addActor(infoButton);
 	}
 
+	StageConnect(String hostname, boolean connectOnAct) {
+		this();
+		this.connectOnAct = connectOnAct;
+		textfield.setText(hostname);
+	}
+
+	@Override
+	public void act() {
+		// Check IP CLI arg
+		if (!Client.args.ip.isEmpty() || connectOnAct)
+			connect();
+	}
+
 	private void connect() {
 		Gdx.input.setOnscreenKeyboardVisible(false);
 		lastHostPreferences.putString("lastHost", textfield.getText());
 		lastHostPreferences.flush();
-		if (Client.connect(textfield.getText()))
+		String ip = Client.args.ip.isEmpty() ? textfield.getText() : Client.args.ip;
+		if (Client.connect(ip, true))
 			Client.setStage(new StageControl());
 	}
 

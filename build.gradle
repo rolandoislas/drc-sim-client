@@ -6,7 +6,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath 'com.android.tools.build:gradle:2.2.2'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.2.0'
     }
 }
@@ -25,6 +25,8 @@ allprojects {
         aiVersion = '1.8.0'
         guavaVersion = '19.0'
         gsonVersion = '2.8.0'
+        beamApiVersion = '3.0.3-SNAPSHOT'
+        beamInteractiveVersion = '1.5.1-SNAPSHOT'
     }
 
     repositories {
@@ -32,6 +34,10 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven {
+            name = "beam"
+            url = "https://maven.beam.pro/content/repositories/snapshots"
+        }
     }
 }
 
@@ -46,6 +52,8 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        compile "pro.beam:api:$beamApiVersion"
+        compile "pro.beam:interactive:$beamInteractiveVersion"
     }
 }
 

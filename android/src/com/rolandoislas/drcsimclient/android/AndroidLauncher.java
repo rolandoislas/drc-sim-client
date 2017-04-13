@@ -8,6 +8,7 @@ import com.rolandoislas.drcsimclient.android.audio.Audio;
 import com.rolandoislas.drcsimclient.control.Control;
 import com.rolandoislas.drcsimclient.control.ControlController;
 import com.rolandoislas.drcsimclient.control.ControlTouch;
+import com.rolandoislas.drcsimclient.data.ArgumentParser;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
@@ -17,6 +18,7 @@ public class AndroidLauncher extends AndroidApplication {
 		config.useImmersiveMode = true;
 		config.useWakelock = true;
 		Control[] controls = new Control[] {new ControlTouch(), new ControlController()};
-		initialize(new Client(controls, new Audio()), config);
+		ArgumentParser args = new ArgumentParser(new String[]{"-f"});
+		initialize(new Client(controls, new Audio(), args), config);
 	}
 }
