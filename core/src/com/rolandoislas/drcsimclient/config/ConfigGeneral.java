@@ -4,14 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
 /**
- * Created by rolando on 3/22/17.
+ * Created by rolando on 4/13/17.
  */
-public class ConfigTouch extends Config {
-    public static final String VIBRATE = "VIBRATE";
+public class ConfigGeneral extends Config {
+    public static final String TOUCH_SCREEN = "TOUCH_SCREEN";
     private final Preferences config;
-    public int vibrate;
+    public int touchScreen;
 
-    public ConfigTouch() {
+    public ConfigGeneral() {
         config = Gdx.app.getPreferences("com.rolandoislas.drcsimclient.config.touch");
     }
 
@@ -24,12 +24,11 @@ public class ConfigTouch extends Config {
 
     @Override
     public void load() {
-        vibrate = config.getInteger(VIBRATE, 1);
-        config.flush();
+        touchScreen = config.getInteger(TOUCH_SCREEN, 1); // Who needs a boolean?
     }
 
     @Override
     public String get(String key) {
-        return config.getString(key); // Why is this a string when the only values are ints?
+        return config.getString(key);
     }
 }
