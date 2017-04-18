@@ -17,21 +17,19 @@ import static com.rolandoislas.drcsimclient.Client.sockets;
  * Created by Rolando on 12/21/2016.
  */
 public class NetUtil {
-	private static HashMap<String, byte[]> buffers = new HashMap<String, byte[]>();
-	private static HashMap<String, Long> timestamps = new HashMap<String, Long>();
-	private static boolean pingSent = false;
+	private byte[] buffer = new byte[0];
+	private long timestamp = 0;
+	private boolean pingSent = false;
 
-	public static byte[] recv(Socket socket, String bufferId) throws DisconnectedException, ReadTimeoutException {
+	public byte[] recv(Socket socket) throws DisconnectedException, ReadTimeoutException {
 		try {
 			BufferedInputStream inStream = new BufferedInputStream(socket.getInputStream());
-			if (!buffers.containsKey(bufferId))
-				buffers.put(bufferId, new byte[0]);
-			if (!timestamps.containsKey(bufferId))
-				timestamps.put(bufferId, System.currentTimeMillis());
-			while (!new String(buffers.get(bufferId)).contains(Codec.endDelimiter)) {
+			if (timestamp == 0)
+				timestamp = System.currentTimeMillis();
+			while (!new String(buffer).contains(Codec.endDelimiter)) {
 				// Disconnected
-				long time = System.currentTimeMillis() - timestamps.get(bufferId);
-				if (time >= 10000 && !Client.connect(sockets.getIp(), false)) {
+				long time = System.currentTimeMillis() - timestamp;
+				if (time >= 10000) {
 					Logger.debug("Disconnected from server");
 					clear();
 					throw new DisconnectedException();
@@ -39,28 +37,26 @@ public class NetUtil {
 				if (time >= 5000 && !pingSent) {
 					Logger.debug("Sending PING command to server");
 					sockets.sendCommand(Constants.COMMAND_PING);
-					Client.connect(sockets.getIp(), false);
 					pingSent = true;
 				}
 				// Timeout
 				if (inStream.available() < 2)
 					throw new ReadTimeoutException();
-				timestamps.put(bufferId, System.currentTimeMillis());
+				timestamp = System.currentTimeMillis();
 				// Read
 				byte[] read = new byte[100000];
 				int numRead = inStream.read(read);
 				read = Arrays.copyOfRange(read, 0, numRead);
 				// Combine saved and new bytes
-				byte[] newBytes = new byte[buffers.get(bufferId).length + read.length];
-				System.arraycopy(buffers.get(bufferId), 0, newBytes, 0, buffers.get(bufferId).length);
-				System.arraycopy(read, 0, newBytes, buffers.get(bufferId).length, read.length);
+				byte[] newBytes = new byte[buffer.length + read.length];
+				System.arraycopy(buffer, 0, newBytes, 0, buffer.length);
+				System.arraycopy(read, 0, newBytes, buffer.length, read.length);
 				// Save
-				buffers.put(bufferId, newBytes);
+				buffer = newBytes;
 			}
-			int index = Bytes.indexOf(buffers.get(bufferId), Codec.endDelimiter.getBytes());
-			byte[] packet = Arrays.copyOfRange(buffers.get(bufferId), 0, index);
-			buffers.put(bufferId, Arrays.copyOfRange(buffers.get(bufferId), index + Codec.endDelimiter.length(),
-					buffers.get(bufferId).length));
+			int index = Bytes.indexOf(buffer, Codec.endDelimiter.getBytes());
+			byte[] packet = Arrays.copyOfRange(buffer, 0, index);
+			buffer = Arrays.copyOfRange(buffer, index + Codec.endDelimiter.length(), buffer.length);
 			return Codec.decode(packet);
 		}
 		catch (IOException e) {
@@ -70,14 +66,14 @@ public class NetUtil {
 		}
 	}
 
-	static void clear() {
-		timestamps.clear();
-		buffers.clear();
+	private void clear() {
+		timestamp = 0;
+		buffer = new byte[0];
 		pingSent = false;
 	}
 
-	public static void resetTimeout() {
-		timestamps.clear();
+	public void resetTimeout() {
+		timestamp = 0;
 		pingSent = false;
 	}
 

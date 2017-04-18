@@ -9,11 +9,6 @@ import javax.sound.sampled.*;
  */
 public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDevice {
     private SourceDataLine line;
-    private final byte[][] audioBuffer = new byte[15][832*2];
-    private int audioPosRead = 0;
-    private int getAudioPosWrite = 0;
-    private long playTime = 0;
-    private boolean running = true;
 
     public AudioDevice() {
         AudioFormat af = new AudioFormat(48000, 16, 2, true, false);
@@ -31,32 +26,6 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
             Logger.exception(e);
             Logger.warn("Audio format not supported by system.");
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Logger.debug("Audio playback thread started");
-                while (running)
-                    writeLoop();
-                Logger.debug("Closing audio line");
-                if (line != null && line.isOpen()) {
-                    line.drain();
-                    line.stop();
-                    line.close();
-                }
-                Logger.debug("Audio playback thread stopped");
-            }
-        }, "Audio Playback Thread").start();
-    }
-
-    private void writeLoop() {
-        if (System.currentTimeMillis() - playTime <= 15)
-            return;
-        playTime = System.currentTimeMillis();
-        for (int samples = 0; samples < 2; samples++) {
-            byte[] sample = audioBuffer[getAudioPosWrite++];
-            write(sample, 0, sample.length);
-            getAudioPosWrite %= audioBuffer.length;
-        }
     }
 
     @Override
@@ -66,13 +35,14 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
 
     @Override
     public void dispose() {
-        running = false;
+        Logger.debug("Closing audio line");
+        if (line != null && line.isOpen())
+            line.close();
     }
 
     @Override
     public void write(byte[] data) {
-        audioBuffer[audioPosRead++] = data;
-        audioPosRead %= audioBuffer.length;
+        write(data, 0, data.length);
     }
 
     public void write(byte[] data, int start, int stop) {

@@ -10,18 +10,20 @@ import static com.rolandoislas.drcsimclient.Client.sockets;
  */
 public class AudioThread extends Thread {
     private final AudioUtil audioUtil;
+    private final NetUtil netUtil;
     private boolean running = true;
 
     public AudioThread() {
         this.audioUtil = new AudioUtil();
         this.setName("Network Thread: Audio");
+        netUtil = new NetUtil();
     }
 
     @Override
     public void run() {
         while (running) {
             try {
-                byte[] packet = NetUtil.recv(sockets.socketAud, "audio");
+                byte[] packet = netUtil.recv(sockets.socketAud);
                 audioUtil.addData(packet);
             } catch (NetUtil.ReadTimeoutException ignore) {
                 try {
@@ -39,5 +41,9 @@ public class AudioThread extends Thread {
     public void dispose() {
         running = false;
         audioUtil.dispose();
+    }
+
+    public void resetTimeout() {
+        netUtil.resetTimeout();
     }
 }

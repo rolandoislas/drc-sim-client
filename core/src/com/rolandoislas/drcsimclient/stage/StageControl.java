@@ -88,8 +88,10 @@ public class StageControl extends Stage {
 	private void checkNetworkCommands() {
 		CommandThread.Command command = commandThread.getCommand();
 		// Handle command
-		if (command.isCommand(Constants.COMMAND_PONG))
-			NetUtil.resetTimeout();
+		if (command.isCommand(Constants.COMMAND_PONG)) {
+			audioThread.resetTimeout();
+			audioThread.resetTimeout();
+		}
 		else if (command.isCommand(Constants.COMMAND_VIBRATE))
 			for (Control control : controls)
 				control.vibrate(1000);

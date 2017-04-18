@@ -32,6 +32,7 @@ public class ConfigKeyboard extends Config {
 		buttonMinus = config.getInteger(BUTTON_MINUS, Input.Keys.X);
 		buttonPlus = config.getInteger(BUTTON_PLUS, Input.Keys.C);
 		buttonHome = config.getInteger(BUTTON_HOME, Input.Keys.Z);
+		micBlow = config.getInteger(MIC_BLOW, Input.Keys.B);
 		config.putInteger(BUTTON_A, buttonA);
 		config.putInteger(BUTTON_B, buttonB);
 		config.putInteger(BUTTON_X, buttonX);
@@ -49,6 +50,7 @@ public class ConfigKeyboard extends Config {
 		config.putInteger(BUTTON_MINUS, buttonMinus);
 		config.putInteger(BUTTON_PLUS, buttonPlus);
 		config.putInteger(BUTTON_HOME, buttonHome);
+		config.putInteger(MIC_BLOW, micBlow);
 		config.flush();
 	}
 

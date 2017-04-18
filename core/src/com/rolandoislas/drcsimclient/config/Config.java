@@ -25,6 +25,7 @@ public class Config {
 	public static final String JOYSTICK_LEFT_Y = "JOYSTICK_LEFT_Y";
 	public static final String JOYSTICK_RIGHT_X = "JOYSTICK_RIGHT_X";
 	public static final String JOYSTICK_RIGHT_Y = "JOYSTICK_RIGHT_Y";
+	public static final String MIC_BLOW = "MIC_BLOW";
 	public int buttonA;
 	public int buttonB;
 	public int buttonX;
@@ -42,6 +43,7 @@ public class Config {
 	public int buttonMinus;
 	public int buttonPlus;
 	public int buttonHome;
+	public int micBlow;
 
 	public void set(String item, int input) {}
 	

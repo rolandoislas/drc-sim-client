@@ -11,7 +11,7 @@ public class ConfigControllerConfig extends Config {
 	public int joystickRightY;
 
 	ConfigControllerConfig(String name) {
-		config = Gdx.app.getPreferences("com.rolandoislas.controller." + name.replaceAll(" ", ""));
+		config = Gdx.app.getPreferences("com.rolandoislas.drcsimclient.controller." + name.replaceAll(" ", ""));
 	}
 
 	public void load() {
@@ -36,6 +36,7 @@ public class ConfigControllerConfig extends Config {
 		joystickLeftY = config.getInteger(JOYSTICK_LEFT_Y, -1);
 		joystickRightX = config.getInteger(JOYSTICK_RIGHT_X, -1);
 		joystickRightY = config.getInteger(JOYSTICK_RIGHT_Y, -1);
+		micBlow = config.getInteger(MIC_BLOW, -1);
 		config.flush();
 	}
 

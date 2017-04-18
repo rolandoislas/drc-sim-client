@@ -8,7 +8,7 @@ import java.io.File;
 public class Constants {
 	// Info
 	public static final String NAME = "DRC Sim Client";
-	public static final String VERSION = "1.1.1";
+	public static final String VERSION = "1.2";
 	// Ports
 	public static final int PORT_SERVER_VID = 50000;
 	public static final int PORT_SERVER_AUD = 50001;
@@ -19,6 +19,7 @@ public class Constants {
 	public static final String COMMAND_INPUT_BUTTON_EXTRA = "INPUT_L3R3"; // TODO rename on server
 	public static final String COMMAND_INPUT_TOUCH = "INPUT_TOUCH";
 	public static final String COMMAND_INPUT_JOYSTICK = "INPUT_JOYSTICK";
+	public static final String COMMAND_INPUT_MIC_BLOW = "INPUT_MIC_BLOW";
 	public static final String COMMAND_VIBRATE = "VIBRATE";
 	public static final String COMMAND_PING = "PING";
 	public static final String COMMAND_PONG = "PONG";

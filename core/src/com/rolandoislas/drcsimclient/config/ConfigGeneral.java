@@ -12,7 +12,7 @@ public class ConfigGeneral extends Config {
     public int touchScreen;
 
     public ConfigGeneral() {
-        config = Gdx.app.getPreferences("com.rolandoislas.drcsimclient.config.touch");
+        config = Gdx.app.getPreferences("com.rolandoislas.drcsimclient.config.general");
     }
 
     @Override
