@@ -8,12 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.rolandoislas.drcsimclient.audio.AudioThread;
 import com.rolandoislas.drcsimclient.config.ConfigGeneral;
-import com.rolandoislas.drcsimclient.config.ConfigTouch;
 import com.rolandoislas.drcsimclient.control.Control;
 import com.rolandoislas.drcsimclient.data.Constants;
 import com.rolandoislas.drcsimclient.graphics.VideoThread;
 import com.rolandoislas.drcsimclient.net.CommandThread;
-import com.rolandoislas.drcsimclient.net.NetUtil;
 import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 import static com.rolandoislas.drcsimclient.Client.*;
@@ -54,6 +52,13 @@ public class StageControl extends Stage {
 		// Command
 		commandThread = new CommandThread();
 		commandThread.start();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		spritebatch = new SpriteBatch();
+		wiiScreen.setBounds(0, 0, width, height);
+		this.getViewport().update(width, height);
 	}
 
 	@Override

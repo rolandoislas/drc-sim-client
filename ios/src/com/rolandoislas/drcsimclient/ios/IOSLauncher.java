@@ -1,9 +1,9 @@
-package com.rolandoislas.ios;
+package com.rolandoislas.drcsimclient.ios;
 
 import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.control.Control;
 import com.rolandoislas.drcsimclient.control.ControlTouch;
-import com.rolandoislas.ios.audio.Audio;
+import com.rolandoislas.drcsimclient.ios.audio.Audio;
 import org.robovm.apple.foundation.NSAutoreleasePool;
 import org.robovm.apple.uikit.UIApplication;
 

@@ -3,6 +3,7 @@ package com.rolandoislas.drcsimclient.stage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
+import com.rolandoislas.drcsimclient.Client;
 
 /**
  * Created by Rolando on 2/6/2017.
@@ -36,4 +37,14 @@ public class Stage extends com.badlogic.gdx.scenes.scene2d.Stage {
 	}
 
 	public void onBackButtonPressed() {}
+
+	public void resize(int width, int height) {
+		try {
+			Client.setStage(this.getClass().newInstance());
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
 }
