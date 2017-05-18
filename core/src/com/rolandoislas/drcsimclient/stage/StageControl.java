@@ -95,7 +95,7 @@ public class StageControl extends Stage {
 		// Handle command
 		if (command.isCommand(Constants.COMMAND_PONG)) {
 			audioThread.resetTimeout();
-			audioThread.resetTimeout();
+			videoThread.resetTimeout();
 		}
 		else if (command.isCommand(Constants.COMMAND_VIBRATE))
 			for (Control control : controls)

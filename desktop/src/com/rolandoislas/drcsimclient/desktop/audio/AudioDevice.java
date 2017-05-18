@@ -38,6 +38,7 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
         Logger.debug("Closing audio line");
         if (line != null && line.isOpen())
             line.close();
+        Logger.debug("Closed audio line"); // Audio seems to hang only outside of the debugger
     }
 
     @Override

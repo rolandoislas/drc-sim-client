@@ -52,4 +52,8 @@ public class VideoThread extends Thread {
         }
         return data;
     }
+
+    public void resetTimeout() {
+        netUtil.resetTimeout();
+    }
 }
