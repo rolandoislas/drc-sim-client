@@ -37,7 +37,8 @@ public class StageConfigController extends StageList {
 		new String[]{"R3", ConfigControllerConfig.BUTTON_R3},
 		new String[]{"Minus", ConfigControllerConfig.BUTTON_MINUS},
 		new String[]{"Plus", ConfigControllerConfig.BUTTON_PLUS},
-		new String[]{"Home", ConfigControllerConfig.BUTTON_HOME}
+		new String[]{"Home", ConfigControllerConfig.BUTTON_HOME},
+		new String[]{"Mic Blow", ConfigControllerConfig.MIC_BLOW}
 	};
 
 	public StageConfigController(boolean enableDropdown) {

@@ -8,12 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.rolandoislas.drcsimclient.audio.AudioThread;
 import com.rolandoislas.drcsimclient.config.ConfigGeneral;
-import com.rolandoislas.drcsimclient.config.ConfigTouch;
 import com.rolandoislas.drcsimclient.control.Control;
 import com.rolandoislas.drcsimclient.data.Constants;
 import com.rolandoislas.drcsimclient.graphics.VideoThread;
 import com.rolandoislas.drcsimclient.net.CommandThread;
-import com.rolandoislas.drcsimclient.net.NetUtil;
 import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 import static com.rolandoislas.drcsimclient.Client.*;
@@ -57,6 +55,13 @@ public class StageControl extends Stage {
 	}
 
 	@Override
+	public void resize(int width, int height) {
+		spritebatch = new SpriteBatch();
+		wiiScreen.setBounds(0, 0, width, height);
+		this.getViewport().update(width, height);
+	}
+
+	@Override
 	public void onBackButtonPressed() {
 		setStage(new StageConnect());
 	}
@@ -88,8 +93,10 @@ public class StageControl extends Stage {
 	private void checkNetworkCommands() {
 		CommandThread.Command command = commandThread.getCommand();
 		// Handle command
-		if (command.isCommand(Constants.COMMAND_PONG))
-			NetUtil.resetTimeout();
+		if (command.isCommand(Constants.COMMAND_PONG)) {
+			audioThread.resetTimeout();
+			videoThread.resetTimeout();
+		}
 		else if (command.isCommand(Constants.COMMAND_VIBRATE))
 			for (Control control : controls)
 				control.vibrate(1000);

@@ -3,6 +3,7 @@ package com.rolandoislas.drcsimclient.control;
 import com.badlogic.gdx.Gdx;
 import com.rolandoislas.drcsimclient.config.ConfigKeyboard;
 import com.rolandoislas.drcsimclient.data.Constants;
+import com.rolandoislas.drcsimclient.net.Codec;
 import com.rolandoislas.drcsimclient.stage.StageControl;
 
 import static com.rolandoislas.drcsimclient.Client.sockets;
@@ -54,13 +55,16 @@ public class ControlKeyboard implements Control {
 		if (Gdx.input.isKeyPressed(config.buttonHome))
 			buttonbits |= Constants.BUTTON_HOME;
 		sockets.sendButtonInput(buttonbits);
-		// L3R3
+		// Extra
 		int extraButtonBits = 0;
 		if (Gdx.input.isKeyPressed(config.buttonL3))
 			extraButtonBits |= Constants.BUTTON_L3;
 		if (Gdx.input.isKeyPressed(config.buttonR3))
 			extraButtonBits |= Constants.BUTTON_R3;
 		sockets.sendExtraButtonInput(extraButtonBits);
+		// Mic
+		if (Gdx.input.isKeyPressed(config.micBlow))
+			sockets.sendCommand(Constants.COMMAND_INPUT_MIC_BLOW, Codec.encodeInput(true));
 		// Joystick
 		// TODO get joystick input based on mouse capture
 	}

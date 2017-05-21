@@ -118,7 +118,6 @@ public class Sockets {
 				e.printStackTrace();
 			}
 		}
-		NetUtil.clear();
 	}
 
 	public String getIp() {

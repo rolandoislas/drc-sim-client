@@ -92,12 +92,6 @@ public class Client extends ApplicationAdapter {
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
-		try {
-			setStage(Client.stage.getClass().newInstance());
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
+		Client.stage.resize(width, height);
 	}
 }

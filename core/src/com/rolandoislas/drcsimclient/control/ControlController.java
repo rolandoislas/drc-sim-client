@@ -6,6 +6,7 @@ import com.badlogic.gdx.controllers.PovDirection;
 import com.rolandoislas.drcsimclient.config.ConfigController;
 import com.rolandoislas.drcsimclient.config.ConfigControllerConfig;
 import com.rolandoislas.drcsimclient.data.Constants;
+import com.rolandoislas.drcsimclient.net.Codec;
 import com.rolandoislas.drcsimclient.stage.StageControl;
 
 import static com.rolandoislas.drcsimclient.Client.sockets;
@@ -62,6 +63,9 @@ public class ControlController implements Control {
 				buttonBits |= Constants.BUTTON_PLUS;
 			if (controller.getButton(config.buttonHome))
 				buttonBits |= Constants.BUTTON_HOME;
+			// Microphone
+			if (controller.getButton(config.micBlow))
+				sockets.sendCommand(Constants.COMMAND_INPUT_MIC_BLOW, Codec.encodeInput(true));
 			// Check joystick
 			axes[0] = controller.getAxis(config.joystickLeftX);
 			axes[1] = controller.getAxis(config.joystickLeftY);
