@@ -9,15 +9,15 @@ import java.util.Arrays;
  * Created by Rolando on 12/21/2016.
  */
 public class Codec {
-	static String endDelimiter = "ewaffle";
-	private static String startDelimiter = "swaffle";
+	static String packetDelimiter = "||||\n";
 	private static String commandDelimiter = "cwaffle";
 
 	public static byte[] decode(byte[] packet) {
+		String startDelimiter = "swaffle";
 		if (new String(packet).contains(startDelimiter))
 			packet = Arrays.copyOfRange(packet, startDelimiter.length(), packet.length);
-		if (new String(packet).contains(endDelimiter))
-			packet = Arrays.copyOfRange(packet, 0, packet.length - endDelimiter.length());
+		if (new String(packet).contains(packetDelimiter))
+			packet = Arrays.copyOfRange(packet, 0, packet.length - packetDelimiter.length());
 		return packet;
 	}
 

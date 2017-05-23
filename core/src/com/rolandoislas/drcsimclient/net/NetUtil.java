@@ -1,7 +1,6 @@
 package com.rolandoislas.drcsimclient.net;
 
 import com.google.common.primitives.Bytes;
-import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.data.Constants;
 import com.rolandoislas.drcsimclient.util.logging.Logger;
 
@@ -9,7 +8,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import static com.rolandoislas.drcsimclient.Client.sockets;
 
@@ -26,7 +24,7 @@ public class NetUtil {
 			BufferedInputStream inStream = new BufferedInputStream(socket.getInputStream());
 			if (timestamp == 0)
 				timestamp = System.currentTimeMillis();
-			while (!new String(buffer).contains(Codec.endDelimiter)) {
+			while (!new String(buffer).contains(Codec.packetDelimiter)) {
 				// Disconnected
 				long time = System.currentTimeMillis() - timestamp;
 				if (time >= 10000) {
@@ -54,9 +52,9 @@ public class NetUtil {
 				// Save
 				buffer = newBytes;
 			}
-			int index = Bytes.indexOf(buffer, Codec.endDelimiter.getBytes());
+			int index = Bytes.indexOf(buffer, Codec.packetDelimiter.getBytes());
 			byte[] packet = Arrays.copyOfRange(buffer, 0, index);
-			buffer = Arrays.copyOfRange(buffer, index + Codec.endDelimiter.length(), buffer.length);
+			buffer = Arrays.copyOfRange(buffer, index + Codec.packetDelimiter.length(), buffer.length);
 			return Codec.decode(packet);
 		}
 		catch (IOException e) {
