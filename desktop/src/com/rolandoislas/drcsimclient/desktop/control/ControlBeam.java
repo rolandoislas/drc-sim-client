@@ -4,6 +4,7 @@ import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.control.Control;
 import com.rolandoislas.drcsimclient.data.Constants;
 import com.rolandoislas.drcsimclient.stage.StageControl;
+import com.rolandoislas.drcsimclient.util.logging.Logger;
 import pro.beam.api.BeamAPI;
 import pro.beam.api.resource.BeamUser;
 import pro.beam.api.services.impl.UsersService;
@@ -129,7 +130,7 @@ public class ControlBeam implements Control {
 	}
 
 	private void die(Exception e) {
-		e.printStackTrace();
+		Logger.exception(e);
 		run = false;
 	}
 

@@ -68,7 +68,12 @@ public class Client extends ApplicationAdapter {
 
 	public static void setStage(Stage stage) {
 		Logger.debug("Setting stage to %1$s", stage.getClass().getSimpleName());
-		Client.stage.dispose();
+		try {
+			Client.stage.dispose();
+		}
+		catch (IllegalArgumentException e) {
+			Logger.exception(e);
+		}
 		Client.stage = stage;
 		Gdx.input.setInputProcessor(stage);
 	}
