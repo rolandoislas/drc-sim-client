@@ -2,6 +2,7 @@ package com.rolandoislas.drcsimclient.net;
 
 import com.badlogic.gdx.Gdx;
 import com.rolandoislas.drcsimclient.data.Constants;
+import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 import java.io.IOException;
 import java.net.*;
@@ -36,7 +37,7 @@ public class Sockets {
 			throw new Exception("Could not connect to host.");
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			Logger.exception(e);
 			throw e;
 		}
 	}
@@ -51,12 +52,12 @@ public class Sockets {
 		try {
 			packet = new DatagramPacket(payload, payload.length, InetAddress.getByName(ip), Constants.PORT_SERVER_CMD);
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			Logger.exception(e);
 		}
 		try {
 			this.socketCmd.send(packet);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.exception(e);
 		}
 	}
 
@@ -108,14 +109,14 @@ public class Sockets {
 			try {
 				socketVid.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.exception(e);
 			}
 		}
 		if (socketAud != null && !socketAud.isClosed()) {
 			try {
 				socketAud.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.exception(e);
 			}
 		}
 	}
