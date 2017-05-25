@@ -74,7 +74,7 @@ public class StageSearch extends StageList {
                 } catch (IOException ignore) {
                     continue;
                 }
-                if (Client.connect(addressTry.getHostAddress(), false)) {
+                if (Client.connect(addressTry.getHostAddress()).isEmpty()) {
                     Client.sockets.dispose();
                     foundServer = true;
                     addItem(addressTry.getHostName(), new ChangeListener() {

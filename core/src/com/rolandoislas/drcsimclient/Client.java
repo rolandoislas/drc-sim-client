@@ -78,7 +78,12 @@ public class Client extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(stage);
 	}
 
-	public static boolean connect(String ip, boolean setStageOnFailure) {
+	/**
+	 * Attempts to connect to a server at a given IP.
+	 * @param ip ip or hostname
+	 * @return empty string or error message
+	 */
+	public static String connect(String ip) {
 		sockets.dispose();
 		sockets.setIp(ip);
 		try {
@@ -87,11 +92,9 @@ public class Client extends ApplicationAdapter {
 			Logger.info("Failed to connect to host \"%1$s\"", ip);
 			Logger.info(e.getMessage());
 			Logger.exception(e);
-			if (setStageOnFailure)
-				setStage(new StageConnect(e.getMessage()));
-			return false;
+			return e.getMessage();
 		}
-		return true;
+		return "";
 	}
 
 	@Override
