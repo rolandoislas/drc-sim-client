@@ -1,8 +1,8 @@
 package com.rolandoislas.drcsimclient.config;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
+import com.rolandoislas.drcsimclient.util.PreferencesUtil;
 
 /**
  * Created by Rolando on 2/6/2017.
@@ -11,7 +11,7 @@ public class ConfigKeyboard extends Config {
 	private Preferences config;
 
 	public ConfigKeyboard() {
-		config = Gdx.app.getPreferences("com.rolandoislas.drcsimclient.config.keyboard");
+		config = PreferencesUtil.get("keyboard");
 	}
 
 	public void load() {

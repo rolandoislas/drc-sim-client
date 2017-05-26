@@ -23,6 +23,8 @@ public class StageSettings extends StageList {
 				addStageChangeItem("Touch Settings", StageConfigTouch.class);
 		}
 		addStageChangeItem("General Settings", StageConfigGeneral.class);
+		// Info
+		addStageChangeItem("Info", StageInfo.class);
 		// Back
 		addStageChangeItem("Back", StageConnect.class);
 	}
