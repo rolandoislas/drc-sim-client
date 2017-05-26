@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.graphics.TextUtil;
+import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 import java.util.ArrayList;
 
@@ -109,9 +110,9 @@ public class StageList extends Stage {
 				try {
 					Client.setStage((Stage) stage.newInstance());
 				} catch (InstantiationException e) {
-					e.printStackTrace();
+					Logger.exception(e);
 				} catch (IllegalAccessException e) {
-					e.printStackTrace();
+					Logger.exception(e);
 				}
 			}
 		});

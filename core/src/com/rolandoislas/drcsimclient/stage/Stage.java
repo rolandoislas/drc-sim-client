@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.rolandoislas.drcsimclient.Client;
+import com.rolandoislas.drcsimclient.util.logging.Logger;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created by Rolando on 2/6/2017.
@@ -36,15 +38,17 @@ public class Stage extends com.badlogic.gdx.scenes.scene2d.Stage {
 
 	}
 
-	public void onBackButtonPressed() {}
+	public void onBackButtonPressed() {
+		throw new NotImplementedException();
+	}
 
 	public void resize(int width, int height) {
 		try {
 			Client.setStage(this.getClass().newInstance());
 		} catch (InstantiationException e) {
-			e.printStackTrace();
+			Logger.exception(e);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			Logger.exception(e);
 		}
 	}
 }

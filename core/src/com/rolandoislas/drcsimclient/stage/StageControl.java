@@ -99,7 +99,8 @@ public class StageControl extends Stage {
 		}
 		else if (command.isCommand(Constants.COMMAND_VIBRATE))
 			for (Control control : controls)
-				control.vibrate(1000);
+				if (config.vibrate == 1)
+					control.vibrate(1000);
 	}
 
 	private void updateWiiVideoFrame() {

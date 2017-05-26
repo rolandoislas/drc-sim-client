@@ -32,6 +32,13 @@ public class StageConfigGeneral extends StageList {
                 addItems();
             }
         });
+        addItem("Vibrate: " + (config.vibrate == 0 ? "false" : "true"), new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                config.set(ConfigGeneral.VIBRATE, config.vibrate == 0 ? 1 : 0);
+                addItems();
+            }
+        });
         // Back
         addStageChangeItem("Back", StageSettings.class);
     }

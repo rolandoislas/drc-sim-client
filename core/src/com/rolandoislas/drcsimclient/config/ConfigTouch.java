@@ -1,18 +1,18 @@
 package com.rolandoislas.drcsimclient.config;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.rolandoislas.drcsimclient.util.PreferencesUtil;
 
 /**
  * Created by rolando on 3/22/17.
  */
 public class ConfigTouch extends Config {
-    public static final String VIBRATE = "VIBRATE";
+    public static final String TRIGGERS_VISIBLE = "TRIGGERS_VISIBLE";
     private final Preferences config;
-    public int vibrate;
+    public int triggersVisible;
 
     public ConfigTouch() {
-        config = Gdx.app.getPreferences("com.rolandoislas.drcsimclient.config.touch");
+        config = PreferencesUtil.get("touch");
     }
 
     @Override
@@ -24,7 +24,7 @@ public class ConfigTouch extends Config {
 
     @Override
     public void load() {
-        vibrate = config.getInteger(VIBRATE, 1);
+        triggersVisible = config.getInteger(TRIGGERS_VISIBLE, 1);
         config.flush();
     }
 

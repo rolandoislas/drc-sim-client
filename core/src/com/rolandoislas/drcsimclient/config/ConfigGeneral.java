@@ -1,18 +1,20 @@
 package com.rolandoislas.drcsimclient.config;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.rolandoislas.drcsimclient.util.PreferencesUtil;
 
 /**
  * Created by rolando on 4/13/17.
  */
 public class ConfigGeneral extends Config {
     public static final String TOUCH_SCREEN = "TOUCH_SCREEN";
+    public static final String VIBRATE = "VIBRATE";
     private final Preferences config;
     public int touchScreen;
+    public int vibrate;
 
     public ConfigGeneral() {
-        config = Gdx.app.getPreferences("com.rolandoislas.drcsimclient.config.general");
+        config = PreferencesUtil.get("general");
     }
 
     @Override
@@ -25,6 +27,7 @@ public class ConfigGeneral extends Config {
     @Override
     public void load() {
         touchScreen = config.getInteger(TOUCH_SCREEN, 1); // Who needs a boolean?
+        vibrate = config.getInteger(VIBRATE, 1);
     }
 
     @Override

@@ -13,14 +13,16 @@ public class ArgumentParser {
 	public final boolean logDebug;
 	public final boolean logExtra;
 	public final boolean logVerbose;
+	public final boolean touchControl;
 
-	public ArgumentParser(String[] args) {
+    public ArgumentParser(String[] args) {
 		argsList = Arrays.asList(args);
 		ip = getArgAfter("-ip");
 		apiBeam = getArgAfter("-api-beam");
 		logDebug = hasOption("-d", "--debug");
 		logExtra = hasOption("-e", "--extra", "-f", "--finer");
 		logVerbose = hasOption("-v", "--verbose");
+		touchControl = hasOption("--touch");
 	}
 
 	private boolean hasOption(String... options) {

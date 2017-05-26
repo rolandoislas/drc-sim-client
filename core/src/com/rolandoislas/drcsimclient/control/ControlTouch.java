@@ -8,8 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.rolandoislas.drcsimclient.config.ConfigTouch;
-import com.rolandoislas.drcsimclient.graphics.TextureUtil;
 import com.rolandoislas.drcsimclient.data.Constants;
+import com.rolandoislas.drcsimclient.graphics.TextureUtil;
 import com.rolandoislas.drcsimclient.stage.StageControl;
 
 import static com.rolandoislas.drcsimclient.Client.sockets;
@@ -25,6 +25,10 @@ public class ControlTouch implements Control {
 	private Button buttonLeftTrigger;
 	private Button buttonRightTrigger;
 	private ConfigTouch config;
+	private TextButton buttonX;
+	private TextButton buttonY;
+	private TextButton buttonMinus;
+	private TextButton buttonPlus;
 
 	@Override
 	public void init(StageControl stage) {
@@ -65,18 +69,41 @@ public class ControlTouch implements Control {
 		buttonB = new TextButton("B", buttonStyle);
 		buttonB.setPosition(Gdx.graphics.getWidth() - x - 2 * buttonWidth, y);
 		stage.addActor(buttonB);
+		// X Button
+		buttonX = new TextButton("X", buttonStyle);
+		buttonX.setPosition(buttonA.getX() - buttonWidth, buttonA.getY() + buttonHeight);
+		stage.addActor(buttonX);
+		// Y Button
+		buttonY = new TextButton("Y", buttonStyle);
+		buttonY.setPosition(buttonB.getX() - buttonWidth, buttonB.getY() + buttonHeight);
+		stage.addActor(buttonY);
 		// Home Button
 		buttonHome = new TextButton("H", buttonStyle);
 		buttonHome.setPosition(Gdx.graphics.getWidth() / 2 - buttonWidth / 2, 10);
 		stage.addActor(buttonHome);
+		// Minus Button
+		buttonMinus = new TextButton("-", buttonStyle);
+		buttonMinus.setPosition(buttonHome.getX() - buttonWidth, buttonHome.getY());
+		stage.addActor(buttonMinus);
+		// Plus Button
+		buttonPlus = new TextButton("+", buttonStyle);
+		buttonPlus.setPosition(buttonHome.getX() + buttonWidth, buttonHome.getY());
+		stage.addActor(buttonPlus);
+		// TODO D-pad
 		// Left Trigger
 		float triggerWidth = Gdx.graphics.getWidth() * .1f;
 		float triggerHeight = Gdx.graphics.getHeight() * .1f;
-		buttonLeftTrigger = new Button(new Button.ButtonStyle());
+		if (config.triggersVisible == 1)
+			buttonLeftTrigger = new TextButton("L", buttonStyle);
+		else
+			buttonLeftTrigger = new Button(new Button.ButtonStyle());
 		buttonLeftTrigger.setBounds(0, Gdx.graphics.getHeight() - triggerHeight, triggerWidth, triggerHeight);
 		stage.addActor(buttonLeftTrigger);
 		// Right Trigger
-		buttonRightTrigger = new Button(new Button.ButtonStyle());
+		if (config.triggersVisible == 1)
+			buttonRightTrigger = new TextButton("R", buttonStyle);
+		else
+			buttonRightTrigger = new Button(new Button.ButtonStyle());
 		buttonRightTrigger.setBounds(Gdx.graphics.getWidth() - triggerWidth,
 				Gdx.graphics.getHeight() - triggerHeight, triggerWidth, triggerHeight);
 		stage.addActor(buttonRightTrigger);
@@ -93,8 +120,16 @@ public class ControlTouch implements Control {
 			buttonBits |= Constants.BUTTON_A;
 		if (buttonB.isPressed())
 			buttonBits |= Constants.BUTTON_B;
+		if (buttonX.isPressed())
+			buttonBits |= Constants.BUTTON_X;
+		if (buttonY.isPressed())
+			buttonBits |= Constants.BUTTON_Y;
 		if (buttonHome.isPressed())
 			buttonBits |= Constants.BUTTON_HOME;
+		if (buttonMinus.isPressed())
+			buttonBits |= Constants.BUTTON_MINUS;
+		if (buttonPlus.isPressed())
+			buttonBits |= Constants.BUTTON_PLUS;
 		if (buttonLeftTrigger.isPressed())
 			buttonBits |= Constants.BUTTON_L;
 		if (buttonRightTrigger.isPressed())
@@ -104,7 +139,6 @@ public class ControlTouch implements Control {
 
 	@Override
 	public void vibrate(int milliseconds) {
-		if (config.vibrate == 1)
-			Gdx.input.vibrate(milliseconds);
+		Gdx.input.vibrate(milliseconds);
 	}
 }
