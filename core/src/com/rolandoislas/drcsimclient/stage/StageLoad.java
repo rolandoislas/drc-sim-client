@@ -8,13 +8,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.rolandoislas.drcsimclient.Client;
+import com.rolandoislas.drcsimclient.graphics.TextUtil;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Locale;
 
 /**
  * Created by Rolando on 2/14/2017.
  */
 public class StageLoad extends Stage {
 	private final Image icon;
-	private float delta = 0;
+	private final Label loading;
+	private int skipTicks = 1;
+	private ArrayList<Float> fontSizes = new ArrayList<Float>(Arrays.asList(1f, 1.5f, 2f));
+	private int percent = 0;
+	private boolean doGenerate;
+	private boolean loadControllers = false;
 
 	public StageLoad() {
 		// Create icon
@@ -30,7 +40,7 @@ public class StageLoad extends Stage {
 		Label.LabelStyle loadingStyle = new Label.LabelStyle();
 		loadingStyle.font = new BitmapFont(Gdx.files.internal("font/collvetica.fnt"));
 		loadingStyle.font.getData().setScale(Gdx.graphics.getHeight() * 2 / 720);
-		Label loading = new Label("DRC Sim", loadingStyle);
+		loading = new Label("DRC Sim", loadingStyle);
 		loading.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() * .2f);
 		loading.setAlignment(Align.center);
 		addActor(loading);
@@ -38,12 +48,33 @@ public class StageLoad extends Stage {
 
 	@Override
 	public void act(float delta) {
-		if (this.delta < 1) {
-			this.delta += delta;
+		if (this.skipTicks > 0) {
+			this.skipTicks--;
+			return;
+		}
+		if (doGenerate) {
+			TextUtil.generateScaledFont(fontSizes.get(0));
+			fontSizes.remove(0);
+			doGenerate = false;
+			skipTicks++;
+			percent += 25;
+			return;
+		}
+		else if (fontSizes.size() > 0) {
+			loading.setText(String.format(Locale.US,"Generating Fonts %d%%", percent));
+			doGenerate = true;
+			skipTicks++;
+			return;
+		}
+		else if (!loadControllers) {
+			loading.setText(String.format(Locale.US,"Loading Controllers %d%%", percent));
+			skipTicks++;
+			loadControllers = true;
 			return;
 		}
 		// Load Controllers - A Windows issue causes this to hangs occasionally.
 		Controllers.getControllers();
+		//loading.setText(String.format(Locale.US,"Launching %d%%", 100));
 		// Set Connect Stage - Font generation takes a while on mobile.
 		Client.setStage(new StageConnect());
 	}
