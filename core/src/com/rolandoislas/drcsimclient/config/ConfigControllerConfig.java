@@ -1,7 +1,7 @@
 package com.rolandoislas.drcsimclient.config;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.rolandoislas.drcsimclient.util.PreferencesUtil;
 
 public class ConfigControllerConfig extends Config {
 	private Preferences config;
@@ -11,7 +11,12 @@ public class ConfigControllerConfig extends Config {
 	public int joystickRightY;
 
 	ConfigControllerConfig(String name) {
-		config = Gdx.app.getPreferences("com.rolandoislas.drcsimclient.controller." + name.replaceAll(" ", ""));
+		name = name
+				.replaceAll(" ", "_")
+				.replaceAll("\\.", "")
+				.replaceAll("-", "_")
+				.toLowerCase();
+		config = PreferencesUtil.get("controller." + name);
 	}
 
 	public void load() {

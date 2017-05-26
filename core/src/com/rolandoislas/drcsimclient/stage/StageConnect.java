@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.graphics.TextUtil;
+import com.rolandoislas.drcsimclient.util.PreferencesUtil;
 import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 /**
@@ -38,7 +39,7 @@ public class StageConnect extends Stage {
 		textfield.setBounds(Gdx.graphics.getWidth() * .15f, Gdx.graphics.getHeight() * .6f,
 				Gdx.graphics.getWidth() * .7f, Gdx.graphics.getHeight() * .1f);
 		textfield.setMessageText("hostname or ip");
-		lastHostPreferences = Gdx.app.getPreferences("com.rolandoislas.drcsimclient.lasthost");
+		lastHostPreferences = PreferencesUtil.get("general");
 		textfield.setText(lastHostPreferences.getString("lastHost"));
 		addActor(textfield);
 		// Connect Button
@@ -129,7 +130,7 @@ public class StageConnect extends Stage {
 		infoButton.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				Gdx.net.openURI("https://github.com/rolandoislas/drc-sim");
+				Client.setStage(new StageInfo());
 			}
 		});
 		addActor(infoButton);

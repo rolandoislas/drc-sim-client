@@ -1,7 +1,7 @@
 package com.rolandoislas.drcsimclient.config;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.rolandoislas.drcsimclient.util.PreferencesUtil;
 
 /**
  * Created by rolando on 4/13/17.
@@ -12,7 +12,7 @@ public class ConfigGeneral extends Config {
     public int touchScreen;
 
     public ConfigGeneral() {
-        config = Gdx.app.getPreferences("com.rolandoislas.drcsimclient.config.general");
+        config = PreferencesUtil.get("general");
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.rolandoislas.drcsimclient.stage;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.graphics.TextUtil;
+import com.rolandoislas.drcsimclient.util.PreferencesUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,8 +77,15 @@ public class StageLoad extends Stage {
 		// Load Controllers - A Windows issue causes this to hangs occasionally.
 		Controllers.getControllers();
 		//loading.setText(String.format(Locale.US,"Launching %d%%", 100));
-		// Set Connect Stage - Font generation takes a while on mobile.
-		Client.setStage(new StageConnect());
+
+		Preferences preferences = PreferencesUtil.get("general");
+		if (preferences.getBoolean("firstRun", true)) {
+			preferences.putBoolean("firstRun", false);
+			preferences.flush();
+			Client.setStage(new StageInfo());
+		}
+		else
+			Client.setStage(new StageConnect());
 	}
 
 	@Override
