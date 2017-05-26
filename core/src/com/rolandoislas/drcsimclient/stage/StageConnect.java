@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.graphics.TextUtil;
+import com.rolandoislas.drcsimclient.util.PreferencesUtil;
 import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 /**
@@ -19,6 +20,7 @@ import com.rolandoislas.drcsimclient.util.logging.Logger;
 public class StageConnect extends Stage {
 	private final Preferences lastHostPreferences;
 	private final TextField textfield;
+	private final Label labelError;
 	private boolean connectOnAct = false;
 
 	public StageConnect(String message) {
@@ -37,7 +39,7 @@ public class StageConnect extends Stage {
 		textfield.setBounds(Gdx.graphics.getWidth() * .15f, Gdx.graphics.getHeight() * .6f,
 				Gdx.graphics.getWidth() * .7f, Gdx.graphics.getHeight() * .1f);
 		textfield.setMessageText("hostname or ip");
-		lastHostPreferences = Gdx.app.getPreferences("com.rolandoislas.drcsimclient.lasthost");
+		lastHostPreferences = PreferencesUtil.get("general");
 		textfield.setText(lastHostPreferences.getString("lastHost"));
 		addActor(textfield);
 		// Connect Button
@@ -73,7 +75,7 @@ public class StageConnect extends Stage {
 		Label.LabelStyle errorLabelStyle = new Label.LabelStyle();
 		errorLabelStyle.font = TextUtil.generateScaledFont(1);
 		errorLabelStyle.fontColor = textfieldStyle.fontColor;
-		final Label labelError = new Label(message, errorLabelStyle);
+		labelError = new Label(message, errorLabelStyle);
 		float iconSize = Gdx.graphics.getWidth() * .1f;
 		labelError.setBounds(iconSize, 10, Gdx.graphics.getWidth() - iconSize * 2,
 				Gdx.graphics.getHeight() * .1f);
@@ -128,7 +130,7 @@ public class StageConnect extends Stage {
 		infoButton.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				Gdx.net.openURI("https://github.com/rolandoislas/drc-sim");
+				Client.setStage(new StageInfo());
 			}
 		});
 		addActor(infoButton);
@@ -151,9 +153,24 @@ public class StageConnect extends Stage {
 		Gdx.input.setOnscreenKeyboardVisible(false);
 		lastHostPreferences.putString("lastHost", textfield.getText());
 		lastHostPreferences.flush();
-		String ip = Client.args.ip.isEmpty() ? textfield.getText() : Client.args.ip;
-		if (Client.connect(ip, true))
-			Client.setStage(new StageControl());
+		labelError.setText("Connecting");
+		final String ip = Client.args.ip.isEmpty() ? textfield.getText() : Client.args.ip;
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				final String connected = Client.connect(ip);
+				Gdx.app.postRunnable(new Runnable() {
+					@Override
+					public void run() {
+						if (connected.isEmpty())
+							Client.setStage(new StageControl());
+						else
+							Client.setStage(new StageConnect(connected));
+
+					}
+				});
+			}
+		}).start();
 	}
 
 	public StageConnect() {
