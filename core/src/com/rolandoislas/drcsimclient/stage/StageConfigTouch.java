@@ -25,10 +25,10 @@ public class StageConfigTouch extends StageList {
 
     void addItems() {
         getList().clearItems();
-        addItem("Vibrate: " + (config.vibrate == 0 ? "false" : "true"), new ChangeListener() {
+        addItem("Triggers Visible: " + (config.triggersVisible == 0 ? "false" : "true"), new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                config.set(ConfigTouch.VIBRATE, config.vibrate == 0 ? 1 : 0);
+                config.set(ConfigTouch.TRIGGERS_VISIBLE, config.triggersVisible == 0 ? 1 : 0);
                 addItems();
             }
         });

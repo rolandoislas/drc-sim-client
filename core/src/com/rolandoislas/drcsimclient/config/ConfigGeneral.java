@@ -8,8 +8,10 @@ import com.rolandoislas.drcsimclient.util.PreferencesUtil;
  */
 public class ConfigGeneral extends Config {
     public static final String TOUCH_SCREEN = "TOUCH_SCREEN";
+    public static final String VIBRATE = "VIBRATE";
     private final Preferences config;
     public int touchScreen;
+    public int vibrate;
 
     public ConfigGeneral() {
         config = PreferencesUtil.get("general");
@@ -25,6 +27,7 @@ public class ConfigGeneral extends Config {
     @Override
     public void load() {
         touchScreen = config.getInteger(TOUCH_SCREEN, 1); // Who needs a boolean?
+        vibrate = config.getInteger(VIBRATE, 1);
     }
 
     @Override
