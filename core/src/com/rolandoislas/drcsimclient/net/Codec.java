@@ -13,9 +13,6 @@ public class Codec {
 	private static String commandDelimiter = "cwaffle";
 
 	public static byte[] decode(byte[] packet) {
-		String startDelimiter = "swaffle";
-		if (new String(packet).contains(startDelimiter))
-			packet = Arrays.copyOfRange(packet, startDelimiter.length(), packet.length);
 		if (new String(packet).contains(packetDelimiter))
 			packet = Arrays.copyOfRange(packet, 0, packet.length - packetDelimiter.length());
 		return packet;
