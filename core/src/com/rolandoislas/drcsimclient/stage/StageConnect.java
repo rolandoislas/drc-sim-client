@@ -1,5 +1,6 @@
 package com.rolandoislas.drcsimclient.stage;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
@@ -179,7 +180,8 @@ public class StageConnect extends Stage {
 
 	@Override
 	public void onBackButtonPressed() {
-		Gdx.app.exit();
+		if (Gdx.app.getType() != Application.ApplicationType.Desktop)
+			Gdx.app.exit();
 	}
 
 	@Override
