@@ -1,5 +1,6 @@
 package com.rolandoislas.drcsimclient.desktop.control;
 
+import com.badlogic.gdx.Gdx;
 import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.control.Control;
 import com.rolandoislas.drcsimclient.data.Constants;
@@ -66,21 +67,21 @@ public class ControlBeam implements Control {
 	}
 
 	private void handleScreen(Protocol.Report message) {
-		int x = 0;
-		int y = 0;
+		short x = 0;
+		short y = 0;
 		for (Protocol.Report.ScreenInfo screen : message.getScreenList()) {
 			if (screen.hasId() && screen.getId() == 5 && screen.hasClicks() &&
 					screen.hasCoordMean() && screen.hasCoordStddev()) {
-				x = (int) (screen.getCoordMean().getX() + screen.getCoordStddev().getX());
-				y = (int) (screen.getCoordMean().getY() + screen.getCoordStddev().getY());
+				x = (short) (screen.getCoordMean().getX() + screen.getCoordStddev().getX());
+				y = (short) (screen.getCoordMean().getY() + screen.getCoordStddev().getY());
 			}
 		}
 		if (x > 0 && y > 0)
-			sockets.sendTouchScreenInput(x, y);
+			sockets.sendTouchScreenInput(x, y, (short) Gdx.graphics.getWidth(), (short) Gdx.graphics.getHeight());
 	}
 
 	private void handleButton(Protocol.Report message) {
-		int buttonBits = 0;
+		short buttonBits = 0;
 		for (Protocol.Report.TactileInfo tactile : message.getTactileList()) {
 			if (tactile.hasHolding() && tactile.hasReleaseFrequency() && tactile.hasId() &&
 					tactile.getHolding() >= 1) {

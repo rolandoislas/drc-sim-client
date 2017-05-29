@@ -9,6 +9,7 @@ import com.rolandoislas.drcsimclient.control.ControlController;
 import com.rolandoislas.drcsimclient.control.ControlKeyboard;
 import com.rolandoislas.drcsimclient.control.ControlTouch;
 import com.rolandoislas.drcsimclient.data.ArgumentParser;
+import com.rolandoislas.drcsimclient.data.Constants;
 import com.rolandoislas.drcsimclient.desktop.audio.Audio;
 import com.rolandoislas.drcsimclient.desktop.control.ControlBeam;
 
@@ -17,7 +18,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
 		config.height = 720;
-		config.title = "DRC Sim";
+		config.title = Constants.NAME;
 		config.backgroundFPS = 30;
 		if (System.getProperties().getProperty("os.name").toLowerCase().contains("mac")) {
 			config.addIcon("image/icon-512.png", Files.FileType.Internal);

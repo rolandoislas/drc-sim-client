@@ -113,9 +113,9 @@ public class ControlTouch implements Control {
 	public void update() {
 		// Check touchpad (joystick) input
 		if (touchpad.isTouched())
-			sockets.sendJoystickInput(touchpad.getKnobPercentX(), touchpad.getKnobPercentY() * -1);
+			sockets.sendJoystickInput(touchpad.getKnobPercentX(), touchpad.getKnobPercentY());
 		// Check buttons
-		int buttonBits = 0;
+		short buttonBits = 0;
 		if (buttonA.isPressed())
 			buttonBits |= Constants.BUTTON_A;
 		if (buttonB.isPressed())

@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.rolandoislas.drcsimclient.Client;
+import com.rolandoislas.drcsimclient.data.Constants;
 import com.rolandoislas.drcsimclient.graphics.TextUtil;
 import com.rolandoislas.drcsimclient.util.PreferencesUtil;
 import com.rolandoislas.drcsimclient.util.logging.Logger;
@@ -114,7 +115,7 @@ public class StageConnect extends Stage {
 		// Title
 		Label.LabelStyle titleLabelStyle = new Label.LabelStyle();
 		titleLabelStyle.font = TextUtil.generateScaledFont(2);
-		Label title = new Label("DRC Sim", titleLabelStyle);
+		Label title = new Label(Constants.NAME, titleLabelStyle);
 		title.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() * .1f);
 		title.setPosition(0, Gdx.graphics.getHeight() - title.getHeight() - marginY);
 		title.setAlignment(Align.center);

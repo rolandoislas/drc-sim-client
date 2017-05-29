@@ -36,9 +36,9 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
     @Override
     public void dispose() {
         Logger.debug("Closing audio line");
-        if (line != null && line.isOpen())
-            line.close();
-        Logger.debug("Closed audio line"); // Audio seems to hang only outside of the debugger
+        // FIXME closing the audio line occasionally stalls the thread
+        //if (line != null && line.isOpen())
+        //    line.close();
     }
 
     @Override

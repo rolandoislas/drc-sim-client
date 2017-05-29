@@ -34,8 +34,17 @@ public class VideoThread extends Thread {
                 }
             } catch (NetUtil.DisconnectedException e) {
                 Logger.exception(e);
-                Logger.info("Disconnected");
-                dispose();
+                Logger.info("Video disconnected attempting to reconnect");
+                synchronized (this) {
+                    imageData = new byte[1]; // Dirty way to get the main thread to update the video to the placeholder
+                }
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e1) {
+                    Logger.exception(e);
+                }
+                netUtil.resetTimeout();
+                sockets.reconnectVideo();
             }
         }
     }
@@ -51,9 +60,5 @@ public class VideoThread extends Thread {
             imageData = new byte[0];
         }
         return data;
-    }
-
-    public void resetTimeout() {
-        netUtil.resetTimeout();
     }
 }
