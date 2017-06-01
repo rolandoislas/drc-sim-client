@@ -25,7 +25,7 @@ public class Client extends ApplicationAdapter {
 		Client.controls = controls;
 		Client.audio = audio;
 		Client.args = argumentParser;
-		Logger.info("Starting %1$s version %2$s", Constants.NAME, Constants.VERSION);
+		Logger.info("Starting %s version %s", Constants.NAME, Constants.VERSION);
 	}
 
 	public Client(Control[] controls, Audio audio) {
@@ -67,7 +67,7 @@ public class Client extends ApplicationAdapter {
 	}
 
 	public static void setStage(Stage stage) {
-		Logger.debug("Setting stage to %1$s", stage.getClass().getSimpleName());
+		Logger.debug("Setting stage to %s", stage.getClass().getSimpleName());
 		try {
 			Client.stage.dispose();
 		}

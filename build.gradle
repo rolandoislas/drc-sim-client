@@ -15,18 +15,12 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
 
-    version = '1.2'
+    version = '2.0'
     ext {
         appName = "drc-sim-client"
         gdxVersion = '1.9.4'
         roboVMVersion = '2.2.0'
-        box2DLightsVersion = '1.4'
-        ashleyVersion = '1.7.0'
-        aiVersion = '1.8.0'
         guavaVersion = '19.0'
-        gsonVersion = '2.8.0'
-        beamApiVersion = '3.0.3-SNAPSHOT'
-        beamInteractiveVersion = '1.5.1-SNAPSHOT'
     }
 
     repositories {
@@ -34,10 +28,6 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-        maven {
-            name = "beam"
-            url = "https://maven.beam.pro/content/repositories/snapshots"
-        }
     }
 }
 
@@ -52,8 +42,6 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        compile "pro.beam:api:$beamApiVersion"
-        compile "pro.beam:interactive:$beamInteractiveVersion"
     }
 }
 
@@ -104,7 +92,6 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
         compile "com.google.guava:guava:$guavaVersion"
-        compile "com.google.code.gson:gson:$gsonVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
     }
 }

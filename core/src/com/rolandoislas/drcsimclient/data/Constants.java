@@ -8,21 +8,21 @@ import java.io.File;
 public class Constants {
 	// Info
 	public static final String NAME = "DRC Sim Client";
-	public static final String VERSION = "1.3";
+	public static final String VERSION = "2.0";
 	// Ports
 	public static final int PORT_SERVER_VID = 50000;
 	public static final int PORT_SERVER_AUD = 50001;
 	public static final int PORT_SERVER_CMD = 50002;
 	// Commands
-	public static final String COMMAND_REGISTER = "REGISTER";
-	public static final String COMMAND_INPUT_BUTTON = "INPUT_BUTTON";
-	public static final String COMMAND_INPUT_BUTTON_EXTRA = "INPUT_L3R3"; // TODO rename on server
-	public static final String COMMAND_INPUT_TOUCH = "INPUT_TOUCH";
-	public static final String COMMAND_INPUT_JOYSTICK = "INPUT_JOYSTICK";
-	public static final String COMMAND_INPUT_MIC_BLOW = "INPUT_MIC_BLOW";
-	public static final String COMMAND_VIBRATE = "VIBRATE";
-	public static final String COMMAND_PING = "PING";
-	public static final String COMMAND_PONG = "PONG";
+	public static final short COMMAND_REGISTER = 0;
+    public static final short COMMAND_PING = 1;
+    public static final short COMMAND_PONG = 2;
+    public static final short COMMAND_INPUT_VIBRATE = 3;
+    public static final short COMMAND_INPUT_MIC_BLOW = 4;
+    public static final short COMMAND_INPUT_BUTTON = 5;
+    public static final short COMMAND_INPUT_JOYSTICK = 6;
+    public static final short COMMAND_INPUT_TOUCH = 7;
+    public static final short COMMAND_INPUT_BUTTON_EXTRA = 8;
 	// Buttons
 	public static final int BUTTON_A = 0x8000;
 	public static final int BUTTON_B = 0x4000;

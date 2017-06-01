@@ -53,7 +53,7 @@ public class ConfigControllerConfig extends Config {
 	}
 	@Override
 	public String get(String key) {
-		return config.getString(key);
+		return String.valueOf(config.getInteger(key));
 	}
 
 }

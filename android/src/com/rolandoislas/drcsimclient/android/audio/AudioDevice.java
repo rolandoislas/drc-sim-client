@@ -38,6 +38,9 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
 
     @Override
     public void write(byte[] data, int offset, int length) {
-        audioTrack.write(data, offset, length);
+        try {
+            audioTrack.write(data, offset, length);
+        }
+        catch (IllegalStateException ignore) {}
     }
 }
