@@ -4,7 +4,6 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.controllers.PovDirection;
 import com.rolandoislas.drcsimclient.config.ConfigController;
-import com.rolandoislas.drcsimclient.config.ConfigControllerConfig;
 import com.rolandoislas.drcsimclient.data.Constants;
 import com.rolandoislas.drcsimclient.stage.StageControl;
 
@@ -14,11 +13,10 @@ import static com.rolandoislas.drcsimclient.Client.sockets;
  * Created by Rolando on 2/6/2017.
  */
 public class ControlController implements Control {
-	private ConfigController config;
 
 	@Override
 	public void init(StageControl stage) {
-		config = new ConfigController();
+
 	}
 
 	@Override
@@ -26,7 +24,8 @@ public class ControlController implements Control {
 		short buttonBits = 0;
 		float[] axes = {0, 0, 0, 0};
 		for (Controller controller : Controllers.getControllers()) {
-			ConfigControllerConfig config = this.config.get(controller.getName());
+			ConfigController config = new ConfigController(controller.getName());
+			config.load();
 			// Check buttons
 			if (controller.getButton(config.buttonA))
 				buttonBits |= Constants.BUTTON_A;
@@ -67,9 +66,9 @@ public class ControlController implements Control {
 				sockets.sendMicBlow();
 			// Check joystick
 			axes[0] = (short) controller.getAxis(config.joystickLeftX);
-			axes[1] = (short) controller.getAxis(config.joystickLeftY);
+			axes[1] = (short) controller.getAxis(config.joystickLeftY) * -1;
 			axes[2] = (short) controller.getAxis(config.joystickRightX);
-			axes[3] = (short) controller.getAxis(config.joystickRightY);
+			axes[3] = (short) controller.getAxis(config.joystickRightY) * -1;
 		}
 		sockets.sendButtonInput(buttonBits);
 		sockets.sendJoystickInput(axes);

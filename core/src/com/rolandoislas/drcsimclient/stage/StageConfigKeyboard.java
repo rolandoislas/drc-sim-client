@@ -16,24 +16,22 @@ public class StageConfigKeyboard extends StageConfigController {
 		super(false);
 		setTitle("Keyboard Settings");
 		config = new ConfigKeyboard();
-		config.load();
 		addItems();
 	}
 
 	@Override
 	void addItems() {
 		getList().clearItems();
+		config.load();
 		for (final String item[] : buttonItems) {
-			if (item[1].contains("JOYSTICK"))
+			if (item[1].contains("JOYSTICK")) // Not implemented
 				continue;
 			String button = "";
 			try {
-				int buttonInt = Integer.parseInt(config.get(item[1]));
-				button =Input.Keys.toString(buttonInt);
+				button = Input.Keys.toString(config.getInteger(item[1]));
 			}
-			catch (NumberFormatException ignore) {}
 			catch (IllegalArgumentException ignore) {}
-			addItem(item[0] + " - [$id]".replace("$id", button), new ChangeListener() {
+			addItem(String.format("%s - [%s]", item[0], button), new ChangeListener() {
 				@Override
 				public void changed(ChangeEvent event, Actor actor) {
 					getInput = item[1];
@@ -54,7 +52,8 @@ public class StageConfigKeyboard extends StageConfigController {
 		if (getInput.equals(""))
 			return;
 		// Save input
-		config.set(getInput, keyCode);
+		config.putInteger(getInput, keyCode);
+		config.flush();
 		getInput = "";
 		getList().setSelectedIndex(-1);
 		addItems();

@@ -32,7 +32,11 @@ public class Client extends ApplicationAdapter {
 		this(controls, audio, new ArgumentParser());
 	}
 
-	@Override
+	public static Stage getStage() {
+		return stage;
+	}
+
+    @Override
 	public void create () {
 		sockets = new Sockets();
 		stage = new Stage();

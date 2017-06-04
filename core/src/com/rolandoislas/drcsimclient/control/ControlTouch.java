@@ -93,14 +93,14 @@ public class ControlTouch implements Control {
 		// Left Trigger
 		float triggerWidth = Gdx.graphics.getWidth() * .1f;
 		float triggerHeight = Gdx.graphics.getHeight() * .1f;
-		if (config.triggersVisible == 1)
+		if (config.triggersVisible)
 			buttonLeftTrigger = new TextButton("L", buttonStyle);
 		else
 			buttonLeftTrigger = new Button(new Button.ButtonStyle());
 		buttonLeftTrigger.setBounds(0, Gdx.graphics.getHeight() - triggerHeight, triggerWidth, triggerHeight);
 		stage.addActor(buttonLeftTrigger);
 		// Right Trigger
-		if (config.triggersVisible == 1)
+		if (config.triggersVisible)
 			buttonRightTrigger = new TextButton("R", buttonStyle);
 		else
 			buttonRightTrigger = new Button(new Button.ButtonStyle());

@@ -9,7 +9,6 @@ import java.util.List;
 public class ArgumentParser {
 	private final List<String> argsList;
 	public final String ip;
-	public final String apiBeam;
 	public final boolean logDebug;
 	public final boolean logExtra;
 	public final boolean logVerbose;
@@ -17,12 +16,28 @@ public class ArgumentParser {
 
     public ArgumentParser(String[] args) {
 		argsList = Arrays.asList(args);
+		if (hasOption("-h", "--help"))
+			showHelp();
 		ip = getArgAfter("-ip");
-		apiBeam = getArgAfter("-api-beam");
 		logDebug = hasOption("-d", "--debug");
 		logExtra = hasOption("-e", "--extra", "-f", "--finer");
 		logVerbose = hasOption("-v", "--verbose");
 		touchControl = hasOption("--touch");
+	}
+
+	private void showHelp() {
+		System.out.printf("%s v%s is licensed under the GPLv2 license.\n", Constants.NAME, Constants.VERSION);
+		System.out.printf("\nUsage: java -jar drc-sim-client.jar [args] [flags]\n");
+		System.out.printf("\nArgs\n");
+		System.out.printf("\t-ip <ip/hostname>: connect directly to an ip or hostname - retries indefinitely\n");
+		System.out.printf("\nFlags\n");
+		System.out.printf("\t--touch: enabled virtual touchscreen controls\n");
+		System.out.printf("\nLogging\n");
+		System.out.printf("\t-d, --debug: debug logging\n");
+		System.out.printf("\t-e, --extra: extra logging\n");
+		System.out.printf("\t-f, --finer: most details are logged\n");
+		System.out.printf("\t-v, --verbose: console spam\n");
+		System.exit(1);
 	}
 
 	private boolean hasOption(String... options) {

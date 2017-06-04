@@ -85,7 +85,7 @@ public class StageControl extends Stage {
 		// Update wii video frame
 		updateWiiVideoFrame();
 		// Check touch/click screen input
-		if (config.touchScreen == 1 && wiiScreen.isPressed())
+		if (config.touchScreen && wiiScreen.isPressed())
 			sockets.sendTouchScreenInput((short) Gdx.input.getX(), (short) Gdx.input.getY(), (short) getWidth(),
 					(short) getHeight());
 		// Update controls
@@ -110,7 +110,7 @@ public class StageControl extends Stage {
 				break;
 			case Constants.COMMAND_INPUT_VIBRATE:
 				for (Control control : controls)
-					if (config.vibrate == 1)
+					if (config.vibrate)
 						control.vibrate(1000);
 				break;
 			case Constants.COMMAND_INPUT_MIC_BLOW:

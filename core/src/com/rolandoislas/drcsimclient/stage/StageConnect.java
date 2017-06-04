@@ -164,6 +164,8 @@ public class StageConnect extends Stage {
 				Gdx.app.postRunnable(new Runnable() {
 					@Override
 					public void run() {
+						if (!(Client.getStage() instanceof StageConnect))
+							return;
 						if (connected.isEmpty())
 							Client.setStage(new StageControl());
 						else

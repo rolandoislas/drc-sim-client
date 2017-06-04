@@ -14,7 +14,6 @@ public class StageConfigGeneral extends StageList {
     public StageConfigGeneral() {
         setTitle("General Settings");
         config = new ConfigGeneral();
-        config.load();
         addItems();
     }
 
@@ -25,17 +24,20 @@ public class StageConfigGeneral extends StageList {
 
     void addItems() {
         getList().clearItems();
-        addItem("Touch Screen: " + (config.touchScreen == 0 ? "false" : "true"), new ChangeListener() {
+        config.load();
+        addItem(String.format("Touch Screen: %s", config.touchScreen), new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                config.set(ConfigGeneral.TOUCH_SCREEN, config.touchScreen == 0 ? 1 : 0);
+                config.putBoolean(ConfigGeneral.TOUCH_SCREEN, !config.touchScreen);
+                config.flush();
                 addItems();
             }
         });
-        addItem("Vibrate: " + (config.vibrate == 0 ? "false" : "true"), new ChangeListener() {
+        addItem(String.format("Vibrate: %s", config.vibrate), new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                config.set(ConfigGeneral.VIBRATE, config.vibrate == 0 ? 1 : 0);
+                config.putBoolean(ConfigGeneral.VIBRATE, !config.vibrate);
+                config.flush();
                 addItems();
             }
         });
