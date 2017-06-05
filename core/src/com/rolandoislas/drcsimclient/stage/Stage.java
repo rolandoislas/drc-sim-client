@@ -30,11 +30,10 @@ public class Stage extends com.badlogic.gdx.scenes.scene2d.Stage {
 		for (Graphics.DisplayMode displayMode : Gdx.graphics.getDisplayModes()) {
 			if (largest == null)
 				largest = displayMode;
-			if (displayMode.width > largest.width && displayMode.height > largest.height)
+			if (displayMode.width > largest.width || displayMode.height > largest.height)
 				largest = displayMode;
 		}
 		Gdx.graphics.setFullscreenMode(largest);
-
 	}
 
 	public void onBackButtonPressed() {

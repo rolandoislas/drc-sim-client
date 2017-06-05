@@ -22,13 +22,19 @@ import java.util.Locale;
 public class StageLoad extends Stage {
 	private final Image icon;
 	private final Label loading;
+	private final boolean doLoad;
 	private int skipTicks = 1;
 	private ArrayList<Float> fontSizes = new ArrayList<Float>(Arrays.asList(1f, 1.5f, 2f));
 	private int percent = 0;
 	private boolean doGenerate;
 	private boolean loadControllers = false;
 
-	public StageLoad() {
+	/**
+	 * Loading stage
+	 * @param doLoad should resources be loaded? It acts as a splash screen otherwise.
+	 */
+	public StageLoad(boolean doLoad) {
+		this.doLoad = doLoad;
 		// Create icon
 		icon = new Image(new Texture("image/icon-512.png"));
 		int size = Gdx.graphics.getHeight();
@@ -50,6 +56,8 @@ public class StageLoad extends Stage {
 
 	@Override
 	public void act(float delta) {
+		if (!doLoad)
+			return;
 		if (this.skipTicks > 0) {
 			this.skipTicks--;
 			return;

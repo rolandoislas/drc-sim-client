@@ -106,7 +106,8 @@ public class StageConfigController extends StageList {
 							input = pov;
 					}
 				} else {
-					for (int button = 0; button < 100; button++)
+					// Some controllers do not start their buttons at zero
+					for (int button = 0; button < 1000; button++)
 						if (controller.getButton(button))
 							input = button;
 				}

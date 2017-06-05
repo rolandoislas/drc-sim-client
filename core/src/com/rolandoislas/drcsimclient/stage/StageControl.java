@@ -86,8 +86,8 @@ public class StageControl extends Stage {
 		updateWiiVideoFrame();
 		// Check touch/click screen input
 		if (config.touchScreen && wiiScreen.isPressed())
-			sockets.sendTouchScreenInput((short) Gdx.input.getX(), (short) Gdx.input.getY(), (short) getWidth(),
-					(short) getHeight());
+			sockets.sendTouchScreenInput((short) Gdx.input.getX(), (short) Gdx.input.getY(),
+					(short) Gdx.graphics.getWidth(), (short) Gdx.graphics.getHeight());
 		// Update controls
 		for (Control control : controls)
 			control.update();

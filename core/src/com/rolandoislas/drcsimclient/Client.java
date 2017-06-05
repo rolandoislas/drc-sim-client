@@ -8,9 +8,9 @@ import com.rolandoislas.drcsimclient.audio.Audio;
 import com.rolandoislas.drcsimclient.control.Control;
 import com.rolandoislas.drcsimclient.data.ArgumentParser;
 import com.rolandoislas.drcsimclient.data.Constants;
+import com.rolandoislas.drcsimclient.graphics.TextUtil;
 import com.rolandoislas.drcsimclient.net.Sockets;
 import com.rolandoislas.drcsimclient.stage.Stage;
-import com.rolandoislas.drcsimclient.stage.StageConnect;
 import com.rolandoislas.drcsimclient.stage.StageLoad;
 import com.rolandoislas.drcsimclient.util.logging.Logger;
 
@@ -40,7 +40,7 @@ public class Client extends ApplicationAdapter {
 	public void create () {
 		sockets = new Sockets();
 		stage = new Stage();
-		setStage(new StageLoad());
+		setStage(new StageLoad(true));
 	}
 
 	@Override
@@ -61,13 +61,18 @@ public class Client extends ApplicationAdapter {
 	@Override
 	public void pause() {
 		super.pause();
-		if (Gdx.app.getType() == Application.ApplicationType.Android)
-			setStage(new StageConnect());
+		if (Gdx.app.getType() == Application.ApplicationType.Android) {
+			setStage(new StageLoad(false));
+			dispose();
+			TextUtil.dispose();
+		}
 	}
 
 	@Override
 	public void resume() {
 		super.resume();
+		if (Gdx.app.getType() == Application.ApplicationType.Android)
+			create();
 	}
 
 	public static void setStage(Stage stage) {
