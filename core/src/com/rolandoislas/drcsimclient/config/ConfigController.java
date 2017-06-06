@@ -18,28 +18,28 @@ public class ConfigController extends ConfigKeymap {
 	}
 
 	public void load() {
-		buttonA = getInteger(BUTTON_A, -1);
-		buttonB = getInteger(BUTTON_B, -1);
-		buttonX = getInteger(BUTTON_X, -1);
-		buttonY = getInteger(BUTTON_Y, -1);
-		buttonUp = getInteger(BUTTON_UP, -1);
-		buttonDown = getInteger(BUTTON_DOWN, -1);
-		buttonLeft = getInteger(BUTTON_LEFT, -1);
-		buttonRight = getInteger(BUTTON_RIGHT, -1);
-		buttonL = getInteger(BUTTON_L, -1);
-		buttonR = getInteger(BUTTON_R, -1);
-		buttonZL = getInteger(BUTTON_ZL, -1);
-		buttonZR = getInteger(BUTTON_ZR, -1);
-		buttonL3 = getInteger(BUTTON_L3, -1);
-		buttonR3 = getInteger(BUTTON_R3, -1);
-		buttonMinus = getInteger(BUTTON_MINUS, -1);
-		buttonPlus = getInteger(BUTTON_PLUS, -1);
-		buttonHome = getInteger(BUTTON_HOME, -1);
-		joystickLeftX = getInteger(JOYSTICK_LEFT_X, -1);
-		joystickLeftY = getInteger(JOYSTICK_LEFT_Y, -1);
-		joystickRightX = getInteger(JOYSTICK_RIGHT_X, -1);
-		joystickRightY = getInteger(JOYSTICK_RIGHT_Y, -1);
-		micBlow = getInteger(MIC_BLOW, -1);
-		flush();
+		buttonA = getInput(BUTTON_A, -1, -1, -1);
+		buttonB = getInput(BUTTON_B, -1, -1, -1);
+		buttonX = getInput(BUTTON_X, -1, -1, -1);
+		buttonY = getInput(BUTTON_Y, -1, -1, -1);
+		buttonUp = getInput(BUTTON_UP, -1, -1, -1);
+		buttonDown = getInput(BUTTON_DOWN, -1, -1, -1);
+		buttonLeft = getInput(BUTTON_LEFT, -1, -1, -1);
+		buttonRight = getInput(BUTTON_RIGHT, -1, -1, -1);
+		buttonL = getInput(BUTTON_L, -1, -1, -1);
+		buttonR = getInput(BUTTON_R, -1, -1, -1);
+		buttonZL = getInput(BUTTON_ZL, -1, -1, -1);
+		buttonZR = getInput(BUTTON_ZR, -1, -1, -1);
+		buttonL3 = getInput(BUTTON_L3, -1, -1, -1);
+		buttonR3 = getInput(BUTTON_R3, -1, -1, -1);
+		buttonMinus = getInput(BUTTON_MINUS, -1, -1, -1);
+		buttonPlus = getInput(BUTTON_PLUS, -1, -1, -1);
+		buttonHome = getInput(BUTTON_HOME, -1, -1, -1);
+		joystickLeftX = getInput(JOYSTICK_LEFT_X, -1, -1, -1);
+		joystickLeftY = getInput(JOYSTICK_LEFT_Y, -1, -1, -1);
+		joystickRightX = getInput(JOYSTICK_RIGHT_X, -1, -1, -1);
+		joystickRightY = getInput(JOYSTICK_RIGHT_Y, -1, -1, -1);
+		micBlow = getInput(MIC_BLOW, -1, -1, -1);
+		save();
 	}
 }

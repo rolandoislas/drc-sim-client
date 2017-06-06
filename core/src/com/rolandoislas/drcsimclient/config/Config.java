@@ -10,9 +10,16 @@ import java.util.Map;
  */
 public class Config implements Preferences {
 	private final Preferences config;
+	private static final int CONFIG_VERSION = 2;
 
 	public Config(String configName) {
 		config = PreferencesUtil.get(configName);
+		// Clear configs if there has been a version change that would cause compatibility issues.
+		if (getInteger("CONFIG_VERSION", 0) != CONFIG_VERSION) {
+			config.clear();
+			config.putInteger("CONFIG_VERSION", CONFIG_VERSION);
+			config.flush();
+		}
 	}
 
 	public void load() {

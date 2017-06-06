@@ -54,6 +54,11 @@ public class StageLoad extends Stage {
 		addActor(loading);
 	}
 
+	@SuppressWarnings("unused")
+	public StageLoad() {
+		this(true);
+	}
+
 	@Override
 	public void act(float delta) {
 		if (!doLoad)

@@ -1,5 +1,7 @@
 package com.rolandoislas.drcsimclient.config;
 
+import java.util.Locale;
+
 /**
  * Created by rolando on 6/2/17.
  */
@@ -26,30 +28,160 @@ public abstract class ConfigKeymap extends Config {
     public static final String JOYSTICK_RIGHT_X = "JOYSTICK_RIGHT_X";
     public static final String JOYSTICK_RIGHT_Y = "JOYSTICK_RIGHT_Y";
     public static final String MIC_BLOW = "MIC_BLOW";
-    public int buttonA;
-    public int buttonB;
-    public int buttonX;
-    public int buttonY;
-    public int buttonUp;
-    public int buttonDown;
-    public int buttonLeft;
-    public int buttonRight;
-    public int buttonL;
-    public int buttonR;
-    public int buttonZL;
-    public int buttonZR;
-    public int buttonL3;
-    public int buttonR3;
-    public int buttonMinus;
-    public int buttonPlus;
-    public int buttonHome;
-    public int micBlow;
-    public int joystickLeftX;
-    public int joystickLeftY;
-    public int joystickRightX;
-    public int joystickRightY;
+    public Input buttonA;
+    public Input buttonB;
+    public Input buttonX;
+    public Input buttonY;
+    public Input buttonUp;
+    public Input buttonDown;
+    public Input buttonLeft;
+    public Input buttonRight;
+    public Input buttonL;
+    public Input buttonR;
+    public Input buttonZL;
+    public Input buttonZR;
+    public Input buttonL3;
+    public Input buttonR3;
+    public Input buttonMinus;
+    public Input buttonPlus;
+    public Input buttonHome;
+    public Input micBlow;
+    public Input joystickLeftX;
+    public Input joystickLeftY;
+    public Input joystickRightX;
+    public Input joystickRightY;
 
-    public ConfigKeymap(String configName) {
+    ConfigKeymap(String configName) {
         super(configName);
+    }
+
+    /**
+     * Store an input.
+     * @param key key that will be used as the place for storage
+     * @param inputType type of input
+     * @param input main input value
+     * @param inputExtra extra input value
+     */
+    public void putInput(String key, int inputType, int input, int inputExtra) {
+        Input in = new Input(inputType, input, inputExtra);
+        putString(key, in.toString());
+    }
+
+    /**
+     * Store an input
+     * @param key key to use for storage
+     * @param input input
+     */
+    public void putInput(String key, Input input) {
+        putString(key, input.toString());
+    }
+
+    /**
+     * Get a stored input or return an input with the provided defaults.
+     * @param key key that will be used as the place for storage
+     * @param inputType type of input
+     * @param input main input value
+     * @param inputExtra extra input value
+     * @return input from the key's value or the defaults provided
+     */
+    public Input getInput(String key, int inputType, int input, int inputExtra) {
+        String inputString = getString(key);
+        if (inputString.isEmpty())
+            return new Input(inputType, input, inputExtra);
+        return new Input(inputString, inputType, input, inputExtra);
+    }
+
+    /**
+     * Save all inputs.
+     */
+    public void save() {
+        putInput(BUTTON_A, buttonA);
+        putInput(BUTTON_B, buttonB);
+        putInput(BUTTON_X, buttonX);
+        putInput(BUTTON_Y, buttonY);
+        putInput(BUTTON_UP, buttonUp);
+        putInput(BUTTON_DOWN, buttonDown);
+        putInput(BUTTON_LEFT, buttonLeft);
+        putInput(BUTTON_RIGHT, buttonRight);
+        putInput(BUTTON_L, buttonL);
+        putInput(BUTTON_R, buttonR);
+        putInput(BUTTON_ZL, buttonZL);
+        putInput(BUTTON_ZR, buttonZR);
+        putInput(BUTTON_L3, buttonL3);
+        putInput(BUTTON_R3, buttonR3);
+        putInput(BUTTON_MINUS, buttonMinus);
+        putInput(BUTTON_PLUS, buttonPlus);
+        putInput(BUTTON_HOME, buttonHome);
+        putInput(JOYSTICK_LEFT_X, joystickLeftX);
+        putInput(JOYSTICK_LEFT_Y, joystickLeftY);
+        putInput(JOYSTICK_RIGHT_X, joystickRightX);
+        putInput(JOYSTICK_RIGHT_Y, joystickRightY);
+        putInput(MIC_BLOW, micBlow);
+        flush();
+    }
+
+    public class Input {
+        public static final int TYPE_AXIS = 0;
+        public static final int TYPE_POV = 1;
+        public static final int TYPE_BUTTON = 2;
+        private int inputType;
+        private int input;
+        private int inputExtra;
+
+        /**
+         * Default input constructor
+         * @param inputType type of input
+         * @param input main input value
+         * @param inputExtra extra input value
+         */
+        Input(int inputType, int input, int inputExtra) {
+            this.inputType = inputType;
+            this.input = input;
+            this.inputExtra = inputExtra;
+        }
+
+        /**
+         * Parses an input string from toString(). Returns given defaults on error.
+         * @param inputString string of input from toString()
+         * @param inputType default type of input
+         * @param input default input value
+         * @param inputExtra default extra input value
+         */
+        Input(String inputString, int inputType, int input, int inputExtra) {
+            this(inputType, input, inputExtra);
+            String parts[] = inputString.split("\\|");
+            if (parts.length == 3) {
+                try {
+                    int _inputType = Integer.parseInt(parts[0]);
+                    int _input = Integer.parseInt(parts[1]);
+                    int _inputExtra = Integer.parseInt(parts[2]);
+                    this.inputType = _inputType;
+                    this.input = _input;
+                    this.inputExtra = _inputExtra;
+                }
+                catch (NumberFormatException ignore) {}
+            }
+        }
+
+        /**
+         * Serialize the Input class.
+         * @return string of numbers delimited with a pipe `|`. (type|input|extra)
+         */
+        @Override
+        public String toString() {
+            return String.format(Locale.US,"%d|%d|%d", inputType, input, inputExtra);
+        }
+
+        public int getInput() {
+            return input;
+        }
+
+        public int getType() {
+            return inputType;
+        }
+
+        public int getExtra() {
+            return inputExtra;
+        }
     }
 }
