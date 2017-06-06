@@ -6,7 +6,6 @@ import com.rolandoislas.drcsimclient.config.ConfigController;
 import com.rolandoislas.drcsimclient.config.ConfigKeymap;
 import com.rolandoislas.drcsimclient.data.Constants;
 import com.rolandoislas.drcsimclient.stage.StageControl;
-import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 import java.util.HashMap;
 
@@ -91,16 +90,15 @@ public class ControlController implements Control {
 	private float getJoystickInput(Controller controller, ConfigKeymap.Input input) {
 		if (input.getType() == ConfigKeymap.Input.TYPE_AXIS)
 			return controller.getAxis(input.getInput());
-		else {
-			Logger.warn("Joystick input not set to an axis. Cannot get input.");
+		else
 			return 0;
-		}
 	}
 
 	private boolean isPressed(Controller controller, ConfigKeymap.Input input) {
 		switch (input.getType()) {
 			case ConfigKeymap.Input.TYPE_AXIS:
-				return true;
+				return input.getExtra() == 0 ? controller.getAxis(input.getInput()) < -.2 :
+						controller.getAxis(input.getInput()) > .2;
 			case ConfigKeymap.Input.TYPE_POV:
 				return controller.getPov(input.getInput()).ordinal() == input.getExtra();
 			case ConfigKeymap.Input.TYPE_BUTTON:

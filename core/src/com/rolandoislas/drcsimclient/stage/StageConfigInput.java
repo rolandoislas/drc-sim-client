@@ -101,7 +101,8 @@ public class StageConfigInput extends Stage {
             return Input.Keys.toString(input.getInput());
         else if (type == CONTROLLER) {
             if (input.getType() == ConfigKeymap.Input.TYPE_AXIS)
-                return String.format(Locale.US, "Axis %d", input.getInput());
+                return String.format(Locale.US, "Axis %d %s", input.getInput(),
+                        input.getExtra() == 0 ? "negative" : "positive");
             else if (input.getType() == ConfigKeymap.Input.TYPE_POV) {
                 String pov = String.valueOf(input.getExtra());
                 for (PovDirection dir : PovDirection.values())
@@ -170,9 +171,17 @@ public class StageConfigInput extends Stage {
                 continue;
             // Check axes
             for (int axis = 0; axis < 1000; axis++) {
-                if (Math.abs(controller.getAxis(axis)) > .2) {
+                float ax = controller.getAxis(axis);
+                if (ax > .5) {
                     input_type = ConfigKeymap.Input.TYPE_AXIS;
                     input = axis;
+                    input_extra = 1; // positive
+                    break main;
+                }
+                else if (ax < -.5) {
+                    input_type = ConfigKeymap.Input.TYPE_AXIS;
+                    input = axis;
+                    input_extra = 0; // negative
                     break main;
                 }
             }
