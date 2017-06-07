@@ -31,7 +31,6 @@ public class StageControl extends Stage {
 	private ConfigGeneral config;
 
 	public StageControl() {
-		Gdx.input.setCatchBackKey(true);
 		// Config
 		config = new ConfigGeneral();
 		config.load();

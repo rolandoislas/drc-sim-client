@@ -63,7 +63,6 @@ public class Client extends ApplicationAdapter {
 		super.pause();
 		if (Gdx.app.getType() == Application.ApplicationType.Android) {
 			setStage(new StageLoad(false));
-			dispose();
 			TextUtil.dispose();
 		}
 	}
@@ -85,6 +84,7 @@ public class Client extends ApplicationAdapter {
 		}
 		Client.stage = stage;
 		Gdx.input.setInputProcessor(stage);
+		Gdx.input.setCatchBackKey(true);
 	}
 
 	/**

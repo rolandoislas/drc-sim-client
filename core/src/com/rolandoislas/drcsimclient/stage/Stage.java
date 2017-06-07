@@ -13,12 +13,16 @@ public class Stage extends com.badlogic.gdx.scenes.scene2d.Stage {
 	@Override
 	public boolean keyDown(int keyCode) {
 		// Back Button
-		if (keyCode == Input.Keys.BACK || keyCode == Input.Keys.ESCAPE)
+		if (keyCode == Input.Keys.BACK || keyCode == Input.Keys.ESCAPE) {
 			this.onBackButtonPressed();
+			return true;
+		}
 		// Fullscreen Button
-		if (Gdx.input.isKeyPressed(Input.Keys.F11))
+		if (Gdx.input.isKeyPressed(Input.Keys.F11)) {
 			toggleFullscreen();
-		return super.keyDown(keyCode);
+			return true;
+		}
+		return false;
 	}
 
 	private void toggleFullscreen() {
