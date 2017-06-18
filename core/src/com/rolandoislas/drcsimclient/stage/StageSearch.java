@@ -60,6 +60,8 @@ public class StageSearch extends StageList {
         boolean foundServer = false;
         for (InetAddress address : interfaceAddresses) {
             for (int end = 1; end <= 255; end++) {
+                if (!(Client.getStage() instanceof StageSearch))
+                    return;
                 InetAddress addressTry;
                 try {
                     byte[] addressBytes = address.getAddress();
@@ -74,7 +76,7 @@ public class StageSearch extends StageList {
                 } catch (IOException ignore) {
                     continue;
                 }
-                if (Client.connect(addressTry.getHostAddress(), false)) {
+                if (Client.connect(addressTry.getHostAddress()).isEmpty()) {
                     Client.sockets.dispose();
                     foundServer = true;
                     addItem(addressTry.getHostName(), new ChangeListener() {

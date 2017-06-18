@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.rolandoislas.drcsimclient.Client;
+import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 /**
  * Created by Rolando on 2/6/2017.
@@ -12,12 +13,16 @@ public class Stage extends com.badlogic.gdx.scenes.scene2d.Stage {
 	@Override
 	public boolean keyDown(int keyCode) {
 		// Back Button
-		if (keyCode == Input.Keys.BACK || keyCode == Input.Keys.ESCAPE)
+		if (keyCode == Input.Keys.BACK || keyCode == Input.Keys.ESCAPE) {
 			this.onBackButtonPressed();
+			return true;
+		}
 		// Fullscreen Button
-		if (Gdx.input.isKeyPressed(Input.Keys.F11))
+		if (Gdx.input.isKeyPressed(Input.Keys.F11)) {
 			toggleFullscreen();
-		return super.keyDown(keyCode);
+			return true;
+		}
+		return false;
 	}
 
 	private void toggleFullscreen() {
@@ -29,22 +34,23 @@ public class Stage extends com.badlogic.gdx.scenes.scene2d.Stage {
 		for (Graphics.DisplayMode displayMode : Gdx.graphics.getDisplayModes()) {
 			if (largest == null)
 				largest = displayMode;
-			if (displayMode.width > largest.width && displayMode.height > largest.height)
+			if (displayMode.width > largest.width || displayMode.height > largest.height)
 				largest = displayMode;
 		}
 		Gdx.graphics.setFullscreenMode(largest);
-
 	}
 
-	public void onBackButtonPressed() {}
+	public void onBackButtonPressed() {
+		throw new RuntimeException("Not implemented");
+	}
 
 	public void resize(int width, int height) {
 		try {
 			Client.setStage(this.getClass().newInstance());
 		} catch (InstantiationException e) {
-			e.printStackTrace();
+			Logger.exception(e);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			Logger.exception(e);
 		}
 	}
 }

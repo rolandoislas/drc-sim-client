@@ -2,12 +2,12 @@ package com.rolandoislas.drcsimclient.control;
 
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.controllers.PovDirection;
 import com.rolandoislas.drcsimclient.config.ConfigController;
-import com.rolandoislas.drcsimclient.config.ConfigControllerConfig;
+import com.rolandoislas.drcsimclient.config.ConfigKeymap;
 import com.rolandoislas.drcsimclient.data.Constants;
-import com.rolandoislas.drcsimclient.net.Codec;
 import com.rolandoislas.drcsimclient.stage.StageControl;
+
+import java.util.HashMap;
 
 import static com.rolandoislas.drcsimclient.Client.sockets;
 
@@ -15,65 +15,96 @@ import static com.rolandoislas.drcsimclient.Client.sockets;
  * Created by Rolando on 2/6/2017.
  */
 public class ControlController implements Control {
-	private ConfigController config;
+
+	private HashMap<Controller, ConfigController> configs = new HashMap<Controller, ConfigController>();
 
 	@Override
 	public void init(StageControl stage) {
-		config = new ConfigController();
+		for (Controller controller : Controllers.getControllers()) {
+			ConfigController config = new ConfigController(controller.getName());
+			config.load();
+			configs.put(controller, config);
+		}
 	}
 
 	@Override
 	public void update() {
-		int buttonBits = 0;
+		short buttonBits = 0;
+		short extraButtonBits = 0;
 		float[] axes = {0, 0, 0, 0};
-		for (Controller controller : Controllers.getControllers()) {
-			ConfigControllerConfig config = this.config.get(controller.getName());
+		boolean micBlow = false;
+		for (HashMap.Entry<Controller, ConfigController> entry : configs.entrySet()) {
+			Controller controller = entry.getKey();
+			ConfigController config = entry.getValue();
 			// Check buttons
-			if (controller.getButton(config.buttonA))
+			if (isPressed(controller, config.buttonA))
 				buttonBits |= Constants.BUTTON_A;
-			if (controller.getButton(config.buttonB))
+			if (isPressed(controller, config.buttonB))
 				buttonBits |= Constants.BUTTON_B;
-			if (controller.getButton(config.buttonX))
+			if (isPressed(controller, config.buttonX))
 				buttonBits |= Constants.BUTTON_X;
-			if (controller.getButton(config.buttonY))
+			if (isPressed(controller, config.buttonY))
 				buttonBits |= Constants.BUTTON_Y;
-			if (controller.getPov(config.buttonUp).equals(PovDirection.north))
+			if (isPressed(controller, config.buttonUp))
 				buttonBits |= Constants.BUTTON_UP;
-			if (controller.getPov(config.buttonDown).equals(PovDirection.south))
+			if (isPressed(controller, config.buttonDown))
 				buttonBits |= Constants.BUTTON_DOWN;
-			if (controller.getPov(config.buttonLeft).equals(PovDirection.west))
+			if (isPressed(controller, config.buttonLeft))
 				buttonBits |= Constants.BUTTON_LEFT;
-			if (controller.getPov(config.buttonRight).equals(PovDirection.east))
+			if (isPressed(controller, config.buttonRight))
 				buttonBits |= Constants.BUTTON_RIGHT;
-			if (controller.getButton(config.buttonL))
+			if (isPressed(controller, config.buttonL))
 				buttonBits |= Constants.BUTTON_L;
-			if (controller.getButton(config.buttonR))
+			if (isPressed(controller, config.buttonR))
 				buttonBits |= Constants.BUTTON_R;
-			if (controller.getButton(config.buttonZL))
+			if (isPressed(controller, config.buttonZL))
 				buttonBits |= Constants.BUTTON_ZL;
-			if (controller.getButton(config.buttonZR))
+			if (isPressed(controller, config.buttonZR))
 				buttonBits |= Constants.BUTTON_ZR;
-			if (controller.getButton(config.buttonL3))
+			if (isPressed(controller, config.buttonL3))
 				buttonBits |= Constants.BUTTON_L3;
-			if (controller.getButton(config.buttonR3))
+			if (isPressed(controller, config.buttonR3))
 				buttonBits |= Constants.BUTTON_R3;
-			if (controller.getButton(config.buttonMinus))
+			if (isPressed(controller, config.buttonMinus))
 				buttonBits |= Constants.BUTTON_MINUS;
-			if (controller.getButton(config.buttonPlus))
+			if (isPressed(controller, config.buttonPlus))
 				buttonBits |= Constants.BUTTON_PLUS;
-			if (controller.getButton(config.buttonHome))
+			if (isPressed(controller, config.buttonHome))
 				buttonBits |= Constants.BUTTON_HOME;
 			// Microphone
-			if (controller.getButton(config.micBlow))
-				sockets.sendCommand(Constants.COMMAND_INPUT_MIC_BLOW, Codec.encodeInput(true));
+			if (isPressed(controller, config.micBlow))
+				micBlow = true;
 			// Check joystick
-			axes[0] = controller.getAxis(config.joystickLeftX);
-			axes[1] = controller.getAxis(config.joystickLeftY);
-			axes[2] = controller.getAxis(config.joystickRightX);
-			axes[3] = controller.getAxis(config.joystickRightY);
+			axes[0] = getJoystickInput(controller, config.joystickLeftX);
+			axes[1] = getJoystickInput(controller, config.joystickLeftY) * -1;
+			axes[2] = getJoystickInput(controller, config.joystickRightX);
+			axes[3] = getJoystickInput(controller, config.joystickRightY) * -1;
 		}
 		sockets.sendButtonInput(buttonBits);
+		sockets.sendExtraButtonInput(extraButtonBits);
 		sockets.sendJoystickInput(axes);
+		if (micBlow)
+			sockets.sendMicBlow();
+	}
+
+	private float getJoystickInput(Controller controller, ConfigKeymap.Input input) {
+		if (input.getType() == ConfigKeymap.Input.TYPE_AXIS)
+			return controller.getAxis(input.getInput());
+		else
+			return 0;
+	}
+
+	private boolean isPressed(Controller controller, ConfigKeymap.Input input) {
+		switch (input.getType()) {
+			case ConfigKeymap.Input.TYPE_AXIS:
+				return input.getExtra() == 0 ? controller.getAxis(input.getInput()) < -.2 :
+						controller.getAxis(input.getInput()) > .2;
+			case ConfigKeymap.Input.TYPE_POV:
+				return controller.getPov(input.getInput()).ordinal() == input.getExtra();
+			case ConfigKeymap.Input.TYPE_BUTTON:
+				return controller.getButton(input.getInput());
+		}
+		return false;
 	}
 
 	@Override

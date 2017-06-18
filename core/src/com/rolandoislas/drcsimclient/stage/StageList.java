@@ -1,17 +1,19 @@
 package com.rolandoislas.drcsimclient.stage;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.graphics.TextUtil;
+import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 import java.util.ArrayList;
 
@@ -29,19 +31,17 @@ public class StageList extends Stage {
 		Skin listSkin = new Skin();
 		listSkin.add("selection", new Texture("image/textfield-selection.png"));
 		List.ListStyle listStyle = new List.ListStyle();
-		if (Gdx.app.getType() == Application.ApplicationType.Desktop)
-			listStyle.font = TextUtil.generateScaledFont(1f);
-		else
-			listStyle.font = TextUtil.generateScaledFont(2f);
+		listStyle.font = TextUtil.generateScaledFont(1f);
 		listStyle.fontColorUnselected = new Color(1, 1, 1, 1);
 		listStyle.fontColorSelected = new Color(.5f, .5f, .5f, 1);
 		listStyle.selection = listSkin.getDrawable("selection");
 		list = new List<String>(listStyle);
 		list.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		list.addListener(new ChangeListener() {
+		list.addListener(new ClickListener(){
 			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				listItemSelected(event, actor);
+			public void clicked(InputEvent event, float x, float y) {
+				if (list.getSelectedIndex() > -1)
+					listeners.get(list.getSelectedIndex()).changed(new ChangeListener.ChangeEvent(), list);
 			}
 		});
 		// Scroll Pane
@@ -92,11 +92,6 @@ public class StageList extends Stage {
 		this(false);
 	}
 
-	private void listItemSelected(ChangeListener.ChangeEvent event, Actor actor) {
-		if (list.getSelectedIndex() > -1)
-			listeners.get(list.getSelectedIndex()).changed(event, actor);
-	}
-
 	void addItem(String name, ChangeListener changeListener) {
 		list.getItems().add(name);
 		listeners.add(changeListener);
@@ -109,9 +104,9 @@ public class StageList extends Stage {
 				try {
 					Client.setStage((Stage) stage.newInstance());
 				} catch (InstantiationException e) {
-					e.printStackTrace();
+					Logger.exception(e);
 				} catch (IllegalAccessException e) {
-					e.printStackTrace();
+					Logger.exception(e);
 				}
 			}
 		});

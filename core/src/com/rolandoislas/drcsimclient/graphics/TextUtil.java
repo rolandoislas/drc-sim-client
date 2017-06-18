@@ -25,4 +25,8 @@ public class TextUtil {
 		fonts.put(size, font);
 		return font;
 	}
+
+	public static void dispose() {
+		fonts.clear();
+	}
 }

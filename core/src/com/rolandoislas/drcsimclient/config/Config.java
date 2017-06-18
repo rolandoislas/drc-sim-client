@@ -1,55 +1,134 @@
 package com.rolandoislas.drcsimclient.config;
 
+import com.badlogic.gdx.Preferences;
+import com.rolandoislas.drcsimclient.util.PreferencesUtil;
+
+import java.util.Map;
+
 /**
  * Created by Rolando on 2/7/2017.
  */
-public class Config {
-	public static final String BUTTON_A = "BUTTON_A";
-	public static final String BUTTON_B = "BUTTON_B";
-	public static final String BUTTON_X = "BUTTON_X";
-	public static final String BUTTON_Y = "BUTTON_Y";
-	public static final String BUTTON_UP = "BUTTON_UP";
-	public static final String BUTTON_DOWN = "BUTTON_DOWN";
-	public static final String BUTTON_LEFT = "BUTTON_LEFT";
-	public static final String BUTTON_RIGHT = "BUTTON_RIGHT";
-	public static final String BUTTON_L = "BUTTON_L";
-	public static final String BUTTON_R = "BUTTON_R";
-	public static final String BUTTON_ZL = "BUTTON_ZL";
-	public static final String BUTTON_ZR = "BUTTON_ZR";
-	public static final String BUTTON_L3 = "BUTTON_L3";
-	public static final String BUTTON_R3 = "BUTTON_R3";
-	public static final String BUTTON_MINUS = "BUTTON_MINUS";
-	public static final String BUTTON_PLUS = "BUTTON_PLUS";
-	public static final String BUTTON_HOME = "BUTTON_HOME";
-	public static final String JOYSTICK_LEFT_X = "JOYSTICK_LEFT_X";
-	public static final String JOYSTICK_LEFT_Y = "JOYSTICK_LEFT_Y";
-	public static final String JOYSTICK_RIGHT_X = "JOYSTICK_RIGHT_X";
-	public static final String JOYSTICK_RIGHT_Y = "JOYSTICK_RIGHT_Y";
-	public static final String MIC_BLOW = "MIC_BLOW";
-	public int buttonA;
-	public int buttonB;
-	public int buttonX;
-	public int buttonY;
-	public int buttonUp;
-	public int buttonDown;
-	public int buttonLeft;
-	public int buttonRight;
-	public int buttonL;
-	public int buttonR;
-	public int buttonZL;
-	public int buttonZR;
-	public int buttonL3;
-	public int buttonR3;
-	public int buttonMinus;
-	public int buttonPlus;
-	public int buttonHome;
-	public int micBlow;
+public class Config implements Preferences {
+	private final Preferences config;
+	private static final int CONFIG_VERSION = 2;
 
-	public void set(String item, int input) {}
-	
-	public void load() {}
+	public Config(String configName) {
+		config = PreferencesUtil.get(configName);
+		// Clear configs if there has been a version change that would cause compatibility issues.
+		if (getInteger("CONFIG_VERSION", 0) != CONFIG_VERSION) {
+			config.clear();
+			config.putInteger("CONFIG_VERSION", CONFIG_VERSION);
+			config.flush();
+		}
+	}
 
-	public String get(String key) {
-		return "";
+	public void load() {
+		throw new RuntimeException("Not implemented");
+	}
+
+	// Config wrapper
+	@Override
+	public Preferences putBoolean(String key, boolean val) {
+		return config.putBoolean(key, val);
+	}
+
+	@Override
+	public Preferences putInteger(String key, int val) {
+		return config.putInteger(key, val);
+	}
+
+	@Override
+	public Preferences putLong(String key, long val) {
+		return config.putLong(key, val);
+	}
+
+	@Override
+	public Preferences putFloat(String key, float val) {
+		return config.putFloat(key, val);
+	}
+
+	@Override
+	public Preferences putString(String key, String val) {
+		return config.putString(key, val);
+	}
+
+	@Override
+	public Preferences put(Map<String, ?> vals) {
+		return config.put(vals);
+	}
+
+	@Override
+	public boolean getBoolean(String key) {
+		return config.getBoolean(key);
+	}
+
+	@Override
+	public int getInteger(String key) {
+		return config.getInteger(key);
+	}
+
+	@Override
+	public long getLong(String key) {
+		return config.getLong(key);
+	}
+
+	@Override
+	public float getFloat(String key) {
+		return config.getFloat(key);
+	}
+
+	@Override
+	public String getString(String key) {
+		return config.getString(key);
+	}
+
+	@Override
+	public boolean getBoolean(String key, boolean defValue) {
+		return config.getBoolean(key, defValue);
+	}
+
+	@Override
+	public int getInteger(String key, int defValue) {
+		return config.getInteger(key, defValue);
+	}
+
+	@Override
+	public long getLong(String key, long defValue) {
+		return config.getLong(key, defValue);
+	}
+
+	@Override
+	public float getFloat(String key, float defValue) {
+		return config.getFloat(key, defValue);
+	}
+
+	@Override
+	public String getString(String key, String defValue) {
+		return config.getString(key, defValue);
+	}
+
+	@Override
+	public Map<String, ?> get() {
+		return config.get();
+	}
+
+	@Override
+	public boolean contains(String key) {
+		return config.contains(key);
+	}
+
+	@Override
+	public void clear() {
+		config.clear();
+	}
+
+	@Override
+	public void remove(String key) {
+		config.remove(key);
+	}
+
+	@Override
+	public void flush() {
+		config.flush();
 	}
 }

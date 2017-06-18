@@ -33,7 +33,14 @@ public class AudioThread extends Thread {
                 }
             } catch (NetUtil.DisconnectedException e) {
                 Logger.exception(e);
-                running = false;
+                Logger.info("Audio disconnected attempting to reconnect");
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e1) {
+                    Logger.exception(e);
+                }
+                netUtil.resetTimeout();
+                sockets.reconnectAudio();
             }
         }
     }
@@ -41,9 +48,5 @@ public class AudioThread extends Thread {
     public void dispose() {
         running = false;
         audioUtil.dispose();
-    }
-
-    public void resetTimeout() {
-        netUtil.resetTimeout();
     }
 }

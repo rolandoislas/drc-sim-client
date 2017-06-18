@@ -1,5 +1,7 @@
 package com.rolandoislas.drcsimclient.net;
 
+import com.rolandoislas.drcsimclient.data.Constants;
+import com.rolandoislas.drcsimclient.net.packet.CommandPacket;
 import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 import java.io.IOException;
@@ -11,8 +13,12 @@ import static com.rolandoislas.drcsimclient.Client.sockets;
  * Created by rolando on 4/6/17.
  */
 public class CommandThread extends Thread {
+    private static final long PING_INTERVAL = 1000;
+    private static final long TIMEOUT = 5000;
     private boolean running = true;
-    private Command command = new Command();
+    private CommandPacket command = null;
+    private long lastPingTime;
+    private long lastPongTime;
 
     public CommandThread() {
         this.setName("Network Thread: Command");
@@ -20,8 +26,18 @@ public class CommandThread extends Thread {
 
     @Override
     public void run() {
+        lastPongTime = System.currentTimeMillis();
         while (running) {
-            byte[] buf = new byte[1024];
+            long time = System.currentTimeMillis();
+            if (time - lastPingTime >= PING_INTERVAL) {
+                sockets.sendCommand(Constants.COMMAND_PING); // Keep-alive
+                lastPingTime = System.currentTimeMillis();
+            }
+            if (time - lastPongTime >= TIMEOUT / 2)
+                sockets.sendCommand(Constants.COMMAND_REGISTER);
+            if (time - lastPongTime >= TIMEOUT)
+                dispose();
+            byte[] buf = new byte[2048];
             DatagramPacket packet = new DatagramPacket(buf, buf.length);
             try {
                 sockets.socketCmd.receive(packet);
@@ -33,13 +49,11 @@ public class CommandThread extends Thread {
                 }
                 continue;
             }
-            String[] command = Codec.decodeCommand(packet);
-            if (!command[0].isEmpty()) {
-                Logger.debug("Received command %1$s", command[0]);
-                Logger.extra("Received command %1$s with data %2$s", command[0], command[1]);
-                synchronized (this) {
-                    this.command = new Command(command[0], command[1]);
-                }
+            if (packet.getLength() <= 0)
+                continue;
+            CommandPacket commandPacket = new CommandPacket(packet);
+            synchronized (this) {
+                this.command = commandPacket;
             }
         }
     }
@@ -48,31 +62,16 @@ public class CommandThread extends Thread {
         running = false;
     }
 
-    public Command getCommand() {
-        Command commandLocal;
+    public CommandPacket getCommand() {
+        CommandPacket commandLocal;
         synchronized (this) {
             commandLocal = this.command;
-            this.command = new Command();
+            this.command = null;
         }
         return commandLocal;
     }
 
-    public class Command {
-        private final String data;
-        private String command;
-
-        Command(String command, String data) {
-            this.command = command;
-            this.data = data;
-        }
-
-        Command() {
-            this.command = "";
-            this.data = "";
-        }
-
-        public boolean isCommand(String commandString) {
-            return this.command.equals(commandString);
-        }
+    public void resetTimeout() {
+        lastPongTime = System.currentTimeMillis();
     }
 }

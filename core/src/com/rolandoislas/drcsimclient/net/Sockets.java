@@ -1,7 +1,8 @@
 package com.rolandoislas.drcsimclient.net;
 
-import com.badlogic.gdx.Gdx;
 import com.rolandoislas.drcsimclient.data.Constants;
+import com.rolandoislas.drcsimclient.net.packet.CommandPacket;
+import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 import java.io.IOException;
 import java.net.*;
@@ -15,10 +16,18 @@ public class Sockets {
 	public DatagramSocket socketCmd;
 	public Socket socketAud;
 
+	/**
+	 * Sets the ip that will be used for connections to a server.
+	 * @param ip server ip
+	 */
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
 
+	/**
+	 * Connect all sockets.
+	 * @throws Exception Exception with user error message on failure
+	 */
 	public void connect() throws Exception {
 		try {
 			this.socketVid = new Socket();
@@ -36,27 +45,60 @@ public class Sockets {
 			throw new Exception("Could not connect to host.");
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			Logger.exception(e);
 			throw e;
 		}
 	}
 
-	public void sendCommand(String name) {
-		sendCommand(name, "");
+	/**
+	 * Attempts to reconnect to the server video socket. Logs exceptions.
+	 */
+	public void reconnectVideo() {
+		try {
+			this.socketVid = new Socket();
+			this.socketVid.connect(new InetSocketAddress(InetAddress.getByName(ip), Constants.PORT_SERVER_VID), 5000);
+		}
+		catch (Exception e) {
+			Logger.exception(e);
+		}
 	}
 
-	public void sendCommand(String name, String data) {
-		byte[] payload = Codec.encodeCommand(name, data);
+	/**
+	 * Attempts to reconnect to the server audio socket. Logs exceptions.
+	 */
+	public void reconnectAudio() {
+		try {
+			this.socketAud = new Socket();
+			this.socketAud.connect(new InetSocketAddress(InetAddress.getByName(ip), Constants.PORT_SERVER_AUD), 5000);
+		}
+		catch (Exception e) {
+			Logger.exception(e);
+		}
+	}
+
+	/**
+	 * Send a header-only packet.
+	 * @param id command id/type
+	 */
+	public void sendCommand(short id) {
+		sendCommand(CommandPacket.create(id));
+	}
+
+	/**
+	 * Send a raw byte packet.
+	 * @param payload packet data
+	 */
+	public void sendCommand(byte[] payload) {
 		DatagramPacket packet = null;
 		try {
 			packet = new DatagramPacket(payload, payload.length, InetAddress.getByName(ip), Constants.PORT_SERVER_CMD);
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			Logger.exception(e);
 		}
 		try {
 			this.socketCmd.send(packet);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.exception(e);
 		}
 	}
 
@@ -64,10 +106,10 @@ public class Sockets {
 	 * Send button input
 	 * @param buttonBits int with button flags
 	 */
-	public void sendButtonInput(int buttonBits) {
+	public void sendButtonInput(short buttonBits) {
 		if (buttonBits == 0)
 			return;
-		sendCommand(Constants.COMMAND_INPUT_BUTTON, Codec.encodeInput(buttonBits));
+		sendCommand(CommandPacket.create_button(buttonBits));
 	}
 
 	public void sendJoystickInput(float knobPercentX, float knobPercentY) {
@@ -80,23 +122,31 @@ public class Sockets {
 	 */
 	public void sendJoystickInput(float[] axes) {
 		boolean found = false;
-		for (float axis : axes)
-			if (Math.abs(axis) > 0.2)
-				found = true;
+		for (int axis = 0; axis < axes.length; axis++) {
+			axes[axis] *= 100;
+			if (axes[axis] < 0) {
+				axes[axis] *= -1;
+				if (axes[axis] > 20)
+					found = true;
+			}
+			else if (axes[axis] > 0) {
+				axes[axis] += 100;
+				if (axes[axis] > 120)
+					found = true;
+			}
+		}
 		if (!found)
 			return;
-		sendCommand(Constants.COMMAND_INPUT_JOYSTICK, Codec.encodeInput(axes));
+		sendCommand(CommandPacket.create_joystick((short) axes[0], (short) axes[1], (short) axes[2], (short) axes[3]));
 	}
 
 	/**
 	 * Send touch screen input
-	 * @param screenX x
-	 * @param screenY y
+	 * @param x x
+	 * @param y y
 	 */
-	public void sendTouchScreenInput(int screenX, int screenY) {
-		int[] touchCoords = new int[]{screenX, screenY};
-		int[] screenSize = new int[]{Gdx.graphics.getWidth(), Gdx.graphics.getHeight()};
-		sendCommand(Constants.COMMAND_INPUT_TOUCH, Codec.encodeInput(new int[][] {touchCoords, screenSize}));
+	public void sendTouchScreenInput(short x, short y, short width, short height) {
+		sendCommand(CommandPacket.create_touch(x, y, width, height));
 	}
 
 	public void dispose() {
@@ -108,14 +158,14 @@ public class Sockets {
 			try {
 				socketVid.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.exception(e);
 			}
 		}
 		if (socketAud != null && !socketAud.isClosed()) {
 			try {
 				socketAud.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.exception(e);
 			}
 		}
 	}
@@ -128,9 +178,16 @@ public class Sockets {
 	 * Sends extra button input. L3R3, TV
 	 * @param extraButtonBits button flags
 	 */
-	public void sendExtraButtonInput(int extraButtonBits) {
+	public void sendExtraButtonInput(short extraButtonBits) {
 		if (extraButtonBits == 0)
 			return;
-		sendCommand(Constants.COMMAND_INPUT_BUTTON_EXTRA, Codec.encodeInput(extraButtonBits));
+		sendCommand(CommandPacket.create_button_extra(extraButtonBits));
+	}
+
+	/**
+	 * Sends a command telling the server to send random audio data to the Wii U.
+	 */
+	public void sendMicBlow() {
+		sendCommand(Constants.COMMAND_INPUT_MIC_BLOW);
 	}
 }

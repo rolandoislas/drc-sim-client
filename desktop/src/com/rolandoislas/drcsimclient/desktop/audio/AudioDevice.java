@@ -9,6 +9,10 @@ import javax.sound.sampled.*;
  */
 public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDevice {
     private SourceDataLine line;
+    private byte buffer[][] = new byte[50][1664]; // Buffer causes some delay
+    private int readIndex = 0;
+    private int writeIndex = 0;
+    private boolean running = true;
 
     public AudioDevice() {
         AudioFormat af = new AudioFormat(48000, 16, 2, true, false);
@@ -21,11 +25,24 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
         catch (IllegalArgumentException e) {
             Logger.exception(e);
             Logger.warn("Audio format not supported by system.");
+            running = false;
         }
         catch (LineUnavailableException e) {
             Logger.exception(e);
             Logger.warn("Audio format not supported by system.");
+            running = false;
         }
+        Thread playThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (running) {
+                    write(buffer[readIndex], 0, buffer[readIndex].length);
+                    readIndex = (readIndex + 1) % (buffer.length - 1);
+                }
+            }
+        });
+        playThread.setName("Audio Play Thread");
+        playThread.start();
     }
 
     @Override
@@ -35,15 +52,17 @@ public class AudioDevice implements com.rolandoislas.drcsimclient.audio.AudioDev
 
     @Override
     public void dispose() {
+        running = false;
         Logger.debug("Closing audio line");
-        if (line != null && line.isOpen())
-            line.close();
-        Logger.debug("Closed audio line"); // Audio seems to hang only outside of the debugger
+        // FIXME closing the audio line occasionally stalls the thread
+        //if (line != null && line.isOpen())
+        //    line.close();
     }
 
     @Override
     public void write(byte[] data) {
-        write(data, 0, data.length);
+        buffer[writeIndex] = data;
+        writeIndex = (writeIndex + 1) % (buffer.length - 1);
     }
 
     public void write(byte[] data, int start, int stop) {

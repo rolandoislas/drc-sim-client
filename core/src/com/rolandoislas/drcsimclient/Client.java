@@ -8,9 +8,9 @@ import com.rolandoislas.drcsimclient.audio.Audio;
 import com.rolandoislas.drcsimclient.control.Control;
 import com.rolandoislas.drcsimclient.data.ArgumentParser;
 import com.rolandoislas.drcsimclient.data.Constants;
+import com.rolandoislas.drcsimclient.graphics.TextUtil;
 import com.rolandoislas.drcsimclient.net.Sockets;
 import com.rolandoislas.drcsimclient.stage.Stage;
-import com.rolandoislas.drcsimclient.stage.StageConnect;
 import com.rolandoislas.drcsimclient.stage.StageLoad;
 import com.rolandoislas.drcsimclient.util.logging.Logger;
 
@@ -25,18 +25,22 @@ public class Client extends ApplicationAdapter {
 		Client.controls = controls;
 		Client.audio = audio;
 		Client.args = argumentParser;
-		Logger.info("Starting %1$s version %2$s", Constants.NAME, Constants.VERSION);
+		Logger.info("Starting %s version %s", Constants.NAME, Constants.VERSION);
 	}
 
 	public Client(Control[] controls, Audio audio) {
 		this(controls, audio, new ArgumentParser());
 	}
 
-	@Override
+	public static Stage getStage() {
+		return stage;
+	}
+
+    @Override
 	public void create () {
 		sockets = new Sockets();
 		stage = new Stage();
-		setStage(new StageLoad());
+		setStage(new StageLoad(true));
 	}
 
 	@Override
@@ -57,23 +61,38 @@ public class Client extends ApplicationAdapter {
 	@Override
 	public void pause() {
 		super.pause();
-		if (Gdx.app.getType() == Application.ApplicationType.Android)
-			setStage(new StageConnect());
+		if (Gdx.app.getType() == Application.ApplicationType.Android) {
+			setStage(new StageLoad(false));
+			TextUtil.dispose();
+		}
 	}
 
 	@Override
 	public void resume() {
 		super.resume();
+		if (Gdx.app.getType() == Application.ApplicationType.Android)
+			create();
 	}
 
 	public static void setStage(Stage stage) {
-		Logger.debug("Setting stage to %1$s", stage.getClass().getSimpleName());
-		Client.stage.dispose();
+		Logger.debug("Setting stage to %s", stage.getClass().getSimpleName());
+		try {
+			Client.stage.dispose();
+		}
+		catch (IllegalArgumentException e) {
+			Logger.exception(e);
+		}
 		Client.stage = stage;
 		Gdx.input.setInputProcessor(stage);
+		Gdx.input.setCatchBackKey(true);
 	}
 
-	public static boolean connect(String ip, boolean setStageOnFailure) {
+	/**
+	 * Attempts to connect to a server at a given IP.
+	 * @param ip ip or hostname
+	 * @return empty string or error message
+	 */
+	public static String connect(String ip) {
 		sockets.dispose();
 		sockets.setIp(ip);
 		try {
@@ -82,11 +101,9 @@ public class Client extends ApplicationAdapter {
 			Logger.info("Failed to connect to host \"%1$s\"", ip);
 			Logger.info(e.getMessage());
 			Logger.exception(e);
-			if (setStageOnFailure)
-				setStage(new StageConnect(e.getMessage()));
-			return false;
+			return e.getMessage();
 		}
-		return true;
+		return "";
 	}
 
 	@Override

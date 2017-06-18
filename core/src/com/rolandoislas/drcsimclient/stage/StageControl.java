@@ -6,12 +6,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.rolandoislas.drcsimclient.Client;
 import com.rolandoislas.drcsimclient.audio.AudioThread;
 import com.rolandoislas.drcsimclient.config.ConfigGeneral;
 import com.rolandoislas.drcsimclient.control.Control;
 import com.rolandoislas.drcsimclient.data.Constants;
 import com.rolandoislas.drcsimclient.graphics.VideoThread;
 import com.rolandoislas.drcsimclient.net.CommandThread;
+import com.rolandoislas.drcsimclient.net.packet.CommandPacket;
 import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 import static com.rolandoislas.drcsimclient.Client.*;
@@ -29,7 +31,6 @@ public class StageControl extends Stage {
 	private ConfigGeneral config;
 
 	public StageControl() {
-		Gdx.input.setCatchBackKey(true);
 		// Config
 		config = new ConfigGeneral();
 		config.load();
@@ -83,28 +84,51 @@ public class StageControl extends Stage {
 		// Update wii video frame
 		updateWiiVideoFrame();
 		// Check touch/click screen input
-		if (config.touchScreen == 1 && wiiScreen.isPressed())
-			sockets.sendTouchScreenInput(Gdx.input.getX(), Gdx.input.getY());
+		if (config.touchScreen && wiiScreen.isPressed())
+			sockets.sendTouchScreenInput((short) Gdx.input.getX(), (short) Gdx.input.getY(),
+					(short) Gdx.graphics.getWidth(), (short) Gdx.graphics.getHeight());
 		// Update controls
 		for (Control control : controls)
 			control.update();
 	}
 
 	private void checkNetworkCommands() {
-		CommandThread.Command command = commandThread.getCommand();
-		// Handle command
-		if (command.isCommand(Constants.COMMAND_PONG)) {
-			audioThread.resetTimeout();
-			videoThread.resetTimeout();
+		if (!commandThread.isAlive())
+			Client.setStage(new StageConnect("Disconnected"));
+		CommandPacket command = commandThread.getCommand();
+		if (command == null)
+			return;
+		Logger.debug("Received command id %d", command.header.type);
+		switch (command.header.type) {
+			case Constants.COMMAND_REGISTER:
+				break;
+			case Constants.COMMAND_PING:
+				break;
+			case Constants.COMMAND_PONG:
+				commandThread.resetTimeout();
+				break;
+			case Constants.COMMAND_INPUT_VIBRATE:
+				for (Control control : controls)
+					if (config.vibrate)
+						control.vibrate(1000);
+				break;
+			case Constants.COMMAND_INPUT_MIC_BLOW:
+				break;
+			case Constants.COMMAND_INPUT_BUTTON:
+				break;
+			case Constants.COMMAND_INPUT_JOYSTICK:
+				break;
+			case Constants.COMMAND_INPUT_TOUCH:
+				break;
+			case Constants.COMMAND_INPUT_BUTTON_EXTRA:
+				break;
+			default:
+				Logger.debug("Unhandled command packet with id %d.", command.header.type);
+				break;
 		}
-		else if (command.isCommand(Constants.COMMAND_VIBRATE))
-			for (Control control : controls)
-				control.vibrate(1000);
 	}
 
 	private void updateWiiVideoFrame() {
-		if (!videoThread.isAlive())
-			setStage(new StageConnect("Disconnected"));
 		try {
 			// Get and draw image
 			byte[] data = videoThread.getImageData();

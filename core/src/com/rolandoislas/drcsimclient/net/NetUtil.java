@@ -1,17 +1,12 @@
 package com.rolandoislas.drcsimclient.net;
 
 import com.google.common.primitives.Bytes;
-import com.rolandoislas.drcsimclient.Client;
-import com.rolandoislas.drcsimclient.data.Constants;
 import com.rolandoislas.drcsimclient.util.logging.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.HashMap;
-
-import static com.rolandoislas.drcsimclient.Client.sockets;
 
 /**
  * Created by Rolando on 12/21/2016.
@@ -19,25 +14,20 @@ import static com.rolandoislas.drcsimclient.Client.sockets;
 public class NetUtil {
 	private byte[] buffer = new byte[0];
 	private long timestamp = 0;
-	private boolean pingSent = false;
+	private String packetDelimiter = "||||\n";
+	private static final long TIMEOUT = 1000;
 
 	public byte[] recv(Socket socket) throws DisconnectedException, ReadTimeoutException {
 		try {
 			BufferedInputStream inStream = new BufferedInputStream(socket.getInputStream());
 			if (timestamp == 0)
 				timestamp = System.currentTimeMillis();
-			while (!new String(buffer).contains(Codec.endDelimiter)) {
+			while (!new String(buffer).contains(packetDelimiter)) {
 				// Disconnected
 				long time = System.currentTimeMillis() - timestamp;
-				if (time >= 10000) {
-					Logger.debug("Disconnected from server");
+				if (time >= TIMEOUT) {
 					clear();
 					throw new DisconnectedException();
-				}
-				if (time >= 5000 && !pingSent) {
-					Logger.debug("Sending PING command to server");
-					sockets.sendCommand(Constants.COMMAND_PING);
-					pingSent = true;
 				}
 				// Timeout
 				if (inStream.available() < 2)
@@ -54,10 +44,10 @@ public class NetUtil {
 				// Save
 				buffer = newBytes;
 			}
-			int index = Bytes.indexOf(buffer, Codec.endDelimiter.getBytes());
+			int index = Bytes.indexOf(buffer, packetDelimiter.getBytes());
 			byte[] packet = Arrays.copyOfRange(buffer, 0, index);
-			buffer = Arrays.copyOfRange(buffer, index + Codec.endDelimiter.length(), buffer.length);
-			return Codec.decode(packet);
+			buffer = Arrays.copyOfRange(buffer, index + packetDelimiter.length(), buffer.length);
+			return decode(packet);
 		}
 		catch (IOException e) {
 			Logger.exception(e);
@@ -66,15 +56,19 @@ public class NetUtil {
 		}
 	}
 
+	private byte[] decode(byte[] packet) {
+		if (new String(packet).contains(packetDelimiter))
+			packet = Arrays.copyOfRange(packet, 0, packet.length - packetDelimiter.length());
+		return packet;
+	}
+
 	private void clear() {
 		timestamp = 0;
 		buffer = new byte[0];
-		pingSent = false;
 	}
 
 	public void resetTimeout() {
 		timestamp = 0;
-		pingSent = false;
 	}
 
 	public static class DisconnectedException extends Exception {
