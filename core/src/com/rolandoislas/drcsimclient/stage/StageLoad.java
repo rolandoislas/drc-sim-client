@@ -47,7 +47,7 @@ public class StageLoad extends Stage {
 		// Loading Text
 		Label.LabelStyle loadingStyle = new Label.LabelStyle();
 		loadingStyle.font = new BitmapFont(Gdx.files.internal("font/collvetica.fnt"));
-		loadingStyle.font.getData().setScale(Gdx.graphics.getHeight() * 2 / 720);
+		loadingStyle.font.getData().setScale(Gdx.graphics.getHeight() * 2f / 720f);
 		loading = new Label("DRC Sim", loadingStyle);
 		loading.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() * .2f);
 		loading.setAlignment(Align.center);
