@@ -13,8 +13,10 @@ public class ArgumentParser {
 	public final boolean logExtra;
 	public final boolean logVerbose;
 	public final boolean touchControl;
+	public final boolean storeFrames;
+	public final int storeFramesAmount;
 
-    public ArgumentParser(String[] args) {
+	public ArgumentParser(String[] args) {
 		argsList = Arrays.asList(args);
 		if (hasOption("-h", "--help"))
 			showHelp();
@@ -23,6 +25,15 @@ public class ArgumentParser {
 		logExtra = hasOption("-e", "--extra", "-f", "--finer");
 		logVerbose = hasOption("-v", "--verbose");
 		touchControl = hasOption("--touch");
+		storeFrames = hasOption("-store-frames");
+		String storeFramesAmountStr = getArgAfter("-store-frames");
+		int storeFramesAmountTemp;
+		try {
+			storeFramesAmountTemp = Integer.parseInt(storeFramesAmountStr);
+		} catch (NumberFormatException e) {
+			storeFramesAmountTemp = 1;
+		}
+		storeFramesAmount = storeFramesAmountTemp;
 	}
 
 	private void showHelp() {
@@ -30,6 +41,7 @@ public class ArgumentParser {
 		System.out.printf("\nUsage: java -jar drc-sim-client.jar [args] [flags]\n");
 		System.out.printf("\nArgs\n");
 		System.out.printf("\t-ip <ip/hostname>: connect directly to an ip or hostname - retries indefinitely\n");
+		System.out.printf("\n-store-frames [amount]: stores video frames to the log directory");
 		System.out.printf("\nFlags\n");
 		System.out.printf("\t--touch: enabled virtual touchscreen controls\n");
 		System.out.printf("\nLogging\n");

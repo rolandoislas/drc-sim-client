@@ -44,4 +44,5 @@ public class Constants {
 	// Path
 	private static final File PATH_ROOT = new File(System.getProperty("user.home"), ".drc-sim/");
     public static final File PATH_LOG = new File(PATH_ROOT, "log");
+	public static final File PATH_FRAMES = new File(PATH_LOG, "frames");
 }

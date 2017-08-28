@@ -16,6 +16,12 @@ import com.rolandoislas.drcsimclient.net.CommandThread;
 import com.rolandoislas.drcsimclient.net.packet.CommandPacket;
 import com.rolandoislas.drcsimclient.util.logging.Logger;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Locale;
+
 import static com.rolandoislas.drcsimclient.Client.*;
 
 /**
@@ -129,11 +135,34 @@ public class StageControl extends Stage {
 	}
 
 	private void updateWiiVideoFrame() {
+		// Get the frame
+		byte[] data = videoThread.getImageData();
+		if (data.length == 0)
+			return;
+		// Save the frame
+		if (Client.args.storeFrames) {
+			if (Constants.PATH_FRAMES.mkdirs())
+				Logger.debug("Created frame log directory");
+			String fileName = new File(Constants.PATH_FRAMES, "frame%d.jpg").getAbsolutePath();
+			int frameNumber = 0;
+			File outFile;
+			do {
+				outFile = new File(String.format(Locale.US, fileName, ++frameNumber));
+			} while (outFile.exists() && frameNumber <= Client.args.storeFramesAmount);
+			if (!outFile.exists() && frameNumber <= Client.args.storeFramesAmount) {
+				try {
+					FileOutputStream fileOutputStream = new FileOutputStream(outFile);
+					fileOutputStream.write(data);
+					fileOutputStream.close();
+				} catch (FileNotFoundException e) {
+					Logger.exception(e);
+				} catch (IOException e) {
+					Logger.exception(e);
+				}
+			}
+		}
+		// Draw the frame
 		try {
-			// Get and draw image
-			byte[] data = videoThread.getImageData();
-			if (data.length == 0)
-				return;
 			Pixmap pixmap = new Pixmap(data, 0, data.length);
 			if (wiiImage != null)
 				wiiImage.dispose();
@@ -144,6 +173,7 @@ public class StageControl extends Stage {
 			Logger.exception(e);
 			wiiImage = new Texture("image/placeholder.png");
 		}
+		// Become the frame!
 	}
 
 	@Override
