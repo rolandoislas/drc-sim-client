@@ -18,7 +18,7 @@ public class DesktopLauncher {
 		config.width = 1280;
 		config.height = 720;
 		config.title = Constants.NAME;
-		config.backgroundFPS = 30;
+		config.backgroundFPS = 60;
 		if (System.getProperties().getProperty("os.name").toLowerCase().contains("mac")) {
 			config.addIcon("image/icon-512.png", Files.FileType.Internal);
 			config.addIcon("image/icon-256.png", Files.FileType.Internal);
