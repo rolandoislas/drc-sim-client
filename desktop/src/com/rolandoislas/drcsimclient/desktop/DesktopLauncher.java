@@ -15,10 +15,10 @@ import com.rolandoislas.drcsimclient.desktop.audio.Audio;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 1280;
-		config.height = 720;
+		config.width = 854;
+		config.height = 480;
 		config.title = Constants.NAME;
-		config.backgroundFPS = 30;
+		config.backgroundFPS = 60;
 		if (System.getProperties().getProperty("os.name").toLowerCase().contains("mac")) {
 			config.addIcon("image/icon-512.png", Files.FileType.Internal);
 			config.addIcon("image/icon-256.png", Files.FileType.Internal);
